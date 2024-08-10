@@ -4,14 +4,14 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
-use App\Models\TU;
+use App\Models\TataUsaha;
 
-class TUController extends Controller
+class TataUsahaController extends Controller
 {
     public function index()
     {
         // Retrieve all records from the 'keuangan' table
-        $arsips = TU::all();
+        $arsips = TataUsaha::all();
 
         return response()->json($arsips);
     }
@@ -19,7 +19,7 @@ class TUController extends Controller
     public function show($id)
     {
         // Find a record by its ID
-        $arsip = TU::findOrFail($id);
+        $arsip = TataUsaha::findOrFail($id);
 
         return response()->json($arsip);
     }
@@ -40,7 +40,7 @@ class TUController extends Controller
         ]);
 
         // Create a new record in the 'keuangan' table
-        $arsip = new TU();
+        $arsip = new TataUsaha();
         $arsip->no_rak = $request->input('no_rak');
         $arsip->no_box = $request->input('no_box');
         $arsip->jenis_arsip = $request->input('jenis_arsip');
@@ -81,7 +81,7 @@ class TUController extends Controller
         }
 
         // Find the record by its ID
-        $arsip = TU::find($id);
+        $arsip = TataUsaha::find($id);
 
         if ($arsip) {
             // Update only the fields that are present in the request
@@ -114,7 +114,7 @@ class TUController extends Controller
     public function destroy($id)
     {
         // Find the record by its ID and delete it
-        $arsip = TU::findOrFail($id);
+        $arsip = TataUsaha::findOrFail($id);
         $arsip->delete();
 
         return response()->json([

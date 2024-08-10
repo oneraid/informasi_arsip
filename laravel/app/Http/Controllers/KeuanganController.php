@@ -6,14 +6,12 @@ use Illuminate\Http\Request;
 use App\Models\Keuangan;
 use Illuminate\Support\Facades\Validator;
 
-
 class KeuanganController extends Controller
 {
     public function index()
     {
         // Retrieve all records from the 'keuangan' table
         $arsips = Keuangan::all();
-
         return response()->json($arsips);
     }
 
@@ -21,42 +19,56 @@ class KeuanganController extends Controller
     {
         // Find a record by its ID
         $arsip = Keuangan::findOrFail($id);
-
         return response()->json($arsip);
     }
 
     public function store(Request $request)
     {
-        // Validate the incoming request data
-        $request->validate([
-            'no_rak' => 'required|string|max:255',
-            'no_box' => 'required|string|max:255',
-            'jenis_arsip' => 'required|string|max:255',
-            'no_arsip' => 'required|string|max:255',
-            'bulan' => 'required|string|max:255',
-            'tahun' => 'required|string|max:255',
-            'warna' => 'required|string|max:255',
-            'jumlah_folder' => 'required|string|max:255',
-            'status' => 'required|string|max:255',
-        ]);
+        try {
+            // Validate the incoming request data
+            $request->validate([
+                'no_rak' => 'required|string|max:255',
+                'no_box' => 'required|string|max:255',
+                'jenis_arsip' => 'required|string|max:255',
+                'no_arsip' => 'required|string|max:255',
+                'bulan' => 'required|string|max:255',
+                'tahun' => 'required|string|max:255',
+                'warna' => 'required|string|max:255',
+                'jumlah_folder' => 'required|string|max:255',
+                'status' => 'required|string|max:255',
+            ]);
 
-        // Create a new record in the 'keuangan' table
-        $arsip = new Keuangan();
-        $arsip->no_rak = $request->input('no_rak');
-        $arsip->no_box = $request->input('no_box');
-        $arsip->jenis_arsip = $request->input('jenis_arsip');
-        $arsip->no_arsip = $request->input('no_arsip');
-        $arsip->bulan = $request->input('bulan');
-        $arsip->tahun = $request->input('tahun');
-        $arsip->warna = $request->input('warna');
-        $arsip->jumlah_folder = $request->input('jumlah_folder');
-        $arsip->status = $request->input('status');
-        $arsip->save();
+            // Create a new record in the 'keuangan' table
+            $arsip = new Keuangan();
+            $arsip->no_rak = $request->input('no_rak');
+            $arsip->no_box = $request->input('no_box');
+            $arsip->jenis_arsip = $request->input('jenis_arsip');
+            $arsip->no_arsip = $request->input('no_arsip');
+            $arsip->bulan = $request->input('bulan');
+            $arsip->tahun = $request->input('tahun');
+            $arsip->warna = $request->input('warna');
+            $arsip->jumlah_folder = $request->input('jumlah_folder');
+            $arsip->status = $request->input('status');
+            $arsip->save();
 
-        return response()->json([
-            'message' => 'Arsip created successfully',
-            'data' => $arsip
-        ], 201);
+            return response()->json([
+                'message' => 'Arsip created successfully',
+                'data' => $arsip
+            ], 201);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            // Handle validation exceptions
+            return response()->json([
+                'status' => 422,
+                'errors' => $e->errors()
+            ], 422);
+        } catch (\Exception $e) {
+            // Handle other exceptions
+            return response()->json([
+                'status' => 500,
+                'message' => 'An unexpected error occurred',
+                'error' => $e->getMessage()
+            ], 500);
+        }
     }
 
     public function update(Request $request, int $id)
@@ -110,7 +122,6 @@ class KeuanganController extends Controller
             ], 404);
         }
     }
-
 
     public function destroy($id)
     {

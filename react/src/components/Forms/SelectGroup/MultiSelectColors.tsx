@@ -1,3 +1,5 @@
+// components/Forms/SelectGroup/MultiSelectColors.tsx
+
 import React, { useState, useEffect, useRef } from 'react';
 
 interface Option {
@@ -7,16 +9,20 @@ interface Option {
   element?: HTMLElement;
 }
 
-interface DropdownProps {
+interface MultiSelectColorsProps {
   id: string;
+  onChange?: (selectedValues: string[]) => void;
 }
 
-const MultiSelectColors: React.FC<DropdownProps> = ({ id }) => {
+const MultiSelectColors: React.FC<MultiSelectColorsProps> = ({
+  id,
+  onChange,
+}) => {
   const [options, setOptions] = useState<Option[]>([]);
   const [selected, setSelected] = useState<number[]>([]);
   const [show, setShow] = useState(false);
-  const dropdownRef = useRef<any>(null);
-  const trigger = useRef<any>(null);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+  const trigger = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const loadOptions = () => {
@@ -41,13 +47,8 @@ const MultiSelectColors: React.FC<DropdownProps> = ({ id }) => {
     setShow(true);
   };
 
-  const isOpen = () => {
-    return show === true;
-  };
-
   const select = (index: number, event: React.MouseEvent) => {
     const newOptions = [...options];
-
     if (!newOptions[index].selected) {
       newOptions[index].selected = true;
       newOptions[index].element = event.currentTarget as HTMLElement;
@@ -59,8 +60,10 @@ const MultiSelectColors: React.FC<DropdownProps> = ({ id }) => {
         setSelected(selected.filter((i) => i !== index));
       }
     }
-
     setOptions(newOptions);
+    if (onChange) {
+      onChange(selected.map((i) => options[i].value));
+    }
   };
 
   const remove = (index: number) => {
@@ -71,6 +74,9 @@ const MultiSelectColors: React.FC<DropdownProps> = ({ id }) => {
       newOptions[index].selected = false;
       setSelected(selected.filter((i) => i !== index));
       setOptions(newOptions);
+      if (onChange) {
+        onChange(selected.map((i) => options[i].value));
+      }
     }
   };
 
@@ -83,8 +89,8 @@ const MultiSelectColors: React.FC<DropdownProps> = ({ id }) => {
       if (!dropdownRef.current) return;
       if (
         !show ||
-        dropdownRef.current.contains(target) ||
-        trigger.current.contains(target)
+        dropdownRef.current.contains(target as Node) ||
+        trigger.current?.contains(target as Node)
       )
         return;
       setShow(false);
@@ -107,7 +113,11 @@ const MultiSelectColors: React.FC<DropdownProps> = ({ id }) => {
         </select>
 
         <div className="flex flex-col items-center">
-          <input name="values" type="hidden" defaultValue={selectedValues()} />
+          <input
+            name="values"
+            type="hidden"
+            defaultValue={selectedValues().join(',')}
+          />
           <div className="relative z-20 inline-block w-full">
             <div className="relative flex flex-col items-center">
               <div ref={trigger} onClick={open} className="w-full">
@@ -150,72 +160,45 @@ const MultiSelectColors: React.FC<DropdownProps> = ({ id }) => {
                       <div className="flex-1">
                         <input
                           placeholder="Select an option"
-                          className="h-full w-full appearance-none bg-transparent p-1 px-2 outline-none"
-                          defaultValue={selectedValues()}
+                          className="h-full w-full appearance-none bg-transparent p-1 text-sm placeholder-gray dark:placeholder-white"
+                          readOnly
                         />
                       </div>
                     )}
                   </div>
-                  <div className="flex w-8 items-center py-1 pl-1 pr-1">
-                    <button
-                      type="button"
-                      onClick={open}
-                      className="h-6 w-6 cursor-pointer outline-none focus:outline-none"
-                    >
-                      <svg
-                        width="24"
-                        height="24"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <g opacity="0.8">
-                          <path
-                            fillRule="evenodd"
-                            clipRule="evenodd"
-                            d="M5.29289 8.29289C5.68342 7.90237 6.31658 7.90237 6.70711 8.29289L12 13.5858L17.2929 8.29289C17.6834 7.90237 18.3166 7.90237 18.7071 8.29289C19.0976 8.68342 19.0976 9.31658 18.7071 9.70711L12.7071 15.7071C12.3166 16.0976 11.6834 16.0976 11.2929 15.7071L5.29289 9.70711C4.90237 9.31658 4.90237 8.68342 5.29289 8.29289Z"
-                            fill="#637381"
-                          ></path>
-                        </g>
-                      </svg>
-                    </button>
-                  </div>
-                </div>
-              </div>
-              <div className="w-full px-4">
-                <div
-                  className={`max-h-select absolute top-full left-0 z-40 w-full overflow-y-auto rounded bg-white shadow dark:bg-form-input ${
-                    isOpen() ? '' : 'hidden'
-                  }`}
-                  ref={dropdownRef}
-                  onFocus={() => setShow(true)}
-                  onBlur={() => setShow(false)}
-                >
-                  <div className="flex w-full flex-col">
-                    {options.map((option, index) => (
-                      <div key={index}>
-                        <div
-                          className="w-full cursor-pointer rounded-t border-b border-stroke hover:bg-primary/5 dark:border-form-strokedark"
-                          onClick={(event) => select(index, event)}
-                        >
-                          <div
-                            className={`relative flex w-full items-center border-l-2 border-transparent p-2 pl-2 ${
-                              option.selected ? 'border-primary' : ''
-                            }`}
-                          >
-                            <div className="flex w-full items-center">
-                              <div className="mx-2 leading-6">
-                                {option.text}
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
                 </div>
               </div>
             </div>
+
+            {show && (
+              <div
+                ref={dropdownRef}
+                className="absolute z-20 mt-2 max-h-60 w-full overflow-y-auto rounded border border-stroke bg-white dark:border-strokedark dark:bg-boxdark"
+              >
+                <div className="p-2">
+                  {options.map((option, index) => (
+                    <div
+                      key={index}
+                      onClick={(event) => select(index, event)}
+                      className={`relative flex cursor-pointer items-center gap-2 rounded px-2 py-1.5 text-sm font-medium hover:bg-gray-100 dark:hover:bg-gray-800 ${
+                        option.selected ? 'bg-primary text-white' : ''
+                      }`}
+                    >
+                      <span>{option.text}</span>
+                      {option.selected && (
+                        <svg
+                          className="absolute right-2 h-4 w-4 fill-current text-primary"
+                          viewBox="0 0 20 20"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path d="M7.629 12.787L4.218 9.377a1 1 0 0 1 1.414-1.414L8 10.207l8.914-8.914a1 1 0 0 1 1.414 1.414L9.629 12.787a1 1 0 0 1-1.414 0z" />
+                        </svg>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </div>
