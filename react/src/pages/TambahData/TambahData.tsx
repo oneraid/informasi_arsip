@@ -174,7 +174,11 @@ const TambahData: React.FC = () => {
           </div>
 
           <div className="mb-4.5">
-            <MultiSelectColors id="color-select" onChange={handleColorChange} />
+            <MultiSelectColors
+              id="color-select"
+              value={formData.warna.split(',')}
+              onChange={handleColorChange}
+            />
           </div>
 
           <div className="mb-4.5">

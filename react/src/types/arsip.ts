@@ -1,6 +1,7 @@
 // types/arsip.ts
 
 export interface Keuangan {
+  id?: number;
   no_rak: string;
   no_box: string;
   jenis_arsip: string;
@@ -13,6 +14,7 @@ export interface Keuangan {
 }
 
 export interface TataUsaha {
+  id?: number;
   no_rak: string;
   no_box: string;
   jenis_arsip: string;

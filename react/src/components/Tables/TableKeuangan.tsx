@@ -1,10 +1,9 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
 import { getKeuangan, deleteKeuangan } from '../../services/api';
 import { Keuangan } from '../../types/arsip';
 
-const TableThree: React.FC = () => {
+const TableKeuangan: React.FC = () => {
   const [keuangan, setKeuangan] = useState<Keuangan[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
@@ -159,4 +158,4 @@ const TableThree: React.FC = () => {
   );
 };
 
-export default TableThree;
+export default TableKeuangan;
