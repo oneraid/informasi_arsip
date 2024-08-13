@@ -153,7 +153,7 @@ const UpdateKeuangan: React.FC = () => {
 
           <div className="mb-4.5">
             <MultiSelectColors
-              id="color-select"
+              id="warna"
               value={formData.warna.split(',')}
               onChange={handleColorChange}
             />

@@ -1,5 +1,3 @@
-// components/Forms/SelectGroup/MultiSelectColors.tsx
-
 import React, { useState, useEffect, useRef } from 'react';
 
 interface Option {
@@ -11,11 +9,13 @@ interface Option {
 
 interface MultiSelectColorsProps {
   id: string;
+  value: string[];
   onChange?: (selectedValues: string[]) => void;
 }
 
 const MultiSelectColors: React.FC<MultiSelectColorsProps> = ({
   id,
+  value,
   onChange,
 }) => {
   const [options, setOptions] = useState<Option[]>([]);
@@ -33,36 +33,44 @@ const MultiSelectColors: React.FC<MultiSelectColorsProps> = ({
           newOptions.push({
             value: select.options[i].value,
             text: select.options[i].innerText,
-            selected: select.options[i].hasAttribute('selected'),
+            selected: value.includes(select.options[i].value),
           });
         }
         setOptions(newOptions);
+        setSelected(
+          newOptions
+            .map((option, index) => (option.selected ? index : -1))
+            .filter((index) => index !== -1),
+        );
       }
     };
 
     loadOptions();
-  }, [id]);
+  }, [id, value]);
 
-  const open = () => {
-    setShow(true);
+  const toggleDropdown = () => {
+    setShow((prevShow) => !prevShow);
   };
 
   const select = (index: number, event: React.MouseEvent) => {
     const newOptions = [...options];
-    if (!newOptions[index].selected) {
-      newOptions[index].selected = true;
-      newOptions[index].element = event.currentTarget as HTMLElement;
-      setSelected([...selected, index]);
-    } else {
-      const selectedIndex = selected.indexOf(index);
-      if (selectedIndex !== -1) {
-        newOptions[index].selected = false;
-        setSelected(selected.filter((i) => i !== index));
-      }
-    }
+    const isSelected = newOptions[index].selected;
+
+    newOptions[index].selected = !isSelected;
     setOptions(newOptions);
+
+    const newSelected = isSelected
+      ? selected.filter((i) => i !== index)
+      : [...selected, index];
+
+    setSelected(newSelected);
+
     if (onChange) {
-      onChange(selected.map((i) => options[i].value));
+      const selectedValues = newOptions
+        .filter((option) => option.selected)
+        .map((option) => option.value);
+      console.log('Colors selected:', selectedValues); // Debugging
+      onChange(selectedValues);
     }
   };
 
@@ -75,7 +83,11 @@ const MultiSelectColors: React.FC<MultiSelectColorsProps> = ({
       setSelected(selected.filter((i) => i !== index));
       setOptions(newOptions);
       if (onChange) {
-        onChange(selected.map((i) => options[i].value));
+        const selectedValues = newOptions
+          .filter((option) => option.selected)
+          .map((option) => option.value);
+        console.log('Colors selected after removal:', selectedValues); // Debugging
+        onChange(selectedValues);
       }
     }
   };
@@ -86,18 +98,18 @@ const MultiSelectColors: React.FC<MultiSelectColorsProps> = ({
 
   useEffect(() => {
     const clickHandler = ({ target }: MouseEvent) => {
-      if (!dropdownRef.current) return;
+      if (!dropdownRef.current || !trigger.current) return;
       if (
-        !show ||
         dropdownRef.current.contains(target as Node) ||
-        trigger.current?.contains(target as Node)
-      )
+        trigger.current.contains(target as Node)
+      ) {
         return;
+      }
       setShow(false);
     };
     document.addEventListener('click', clickHandler);
     return () => document.removeEventListener('click', clickHandler);
-  });
+  }, [show]);
 
   return (
     <div className="relative z-50">
@@ -120,7 +132,7 @@ const MultiSelectColors: React.FC<MultiSelectColorsProps> = ({
           />
           <div className="relative z-20 inline-block w-full">
             <div className="relative flex flex-col items-center">
-              <div ref={trigger} onClick={open} className="w-full">
+              <div ref={trigger} onClick={toggleDropdown} className="w-full">
                 <div className="mb-2 flex rounded border border-stroke py-2 pl-3 pr-3 outline-none transition focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input">
                   <div className="flex flex-auto flex-wrap gap-3">
                     {selected.map((index) => (
@@ -160,45 +172,59 @@ const MultiSelectColors: React.FC<MultiSelectColorsProps> = ({
                       <div className="flex-1">
                         <input
                           placeholder="Select an option"
-                          className="h-full w-full appearance-none bg-transparent p-1 text-sm placeholder-gray dark:placeholder-white"
-                          readOnly
+                          className="h-full w-full appearance-none bg-transparent p-1 px-2 outline-none"
+                          defaultValue={selectedValues().join(',')}
                         />
                       </div>
                     )}
                   </div>
+                  <div className="flex w-8 items-center py-1 pl-1 pr-1">
+                    <button
+                      type="button"
+                      onClick={toggleDropdown}
+                      className="h-6 w-6 cursor-pointer outline-none focus:outline-none"
+                    >
+                      <svg
+                        width="24"
+                        height="24"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <g opacity="0.8">
+                          <path
+                            fillRule="evenodd"
+                            clipRule="evenodd"
+                            d="M5.29289 8.29289C5.68342 7.90237 6.31658 7.90237 6.70711 8.29289L12 13.5858L17.2929 8.29289C17.6834 7.90237 18.3166 7.90237 18.7071 8.29289C19.0976 8.68342 19.0976 9.31658 18.7071 9.70711L12.7071 15.7071C12.3166 16.0976 11.6834 16.0976 11.2929 15.7071L5.29289 9.70711C4.90237 9.31658 4.90237 8.68342 5.29289 8.29289Z"
+                            fill="currentColor"
+                          ></path>
+                        </g>
+                      </svg>
+                    </button>
+                  </div>
                 </div>
+                {show && (
+                  <div
+                    ref={dropdownRef}
+                    className="absolute top-full z-30 mt-1 w-full rounded border border-stroke bg-white shadow-lg dark:border-strokedark dark:bg-form-input"
+                  >
+                    <div className="overflow-y-auto max-h-40">
+                      {options.map((option, index) => (
+                        <div
+                          key={index}
+                          className={`cursor-pointer px-4 py-2 text-sm hover:bg-primary hover:text-white ${
+                            option.selected ? 'bg-primary text-white' : ''
+                          }`}
+                          onClick={(event) => select(index, event)}
+                        >
+                          {option.text}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
-
-            {show && (
-              <div
-                ref={dropdownRef}
-                className="absolute z-20 mt-2 max-h-60 w-full overflow-y-auto rounded border border-stroke bg-white dark:border-strokedark dark:bg-boxdark"
-              >
-                <div className="p-2">
-                  {options.map((option, index) => (
-                    <div
-                      key={index}
-                      onClick={(event) => select(index, event)}
-                      className={`relative flex cursor-pointer items-center gap-2 rounded px-2 py-1.5 text-sm font-medium hover:bg-gray-100 dark:hover:bg-gray-800 ${
-                        option.selected ? 'bg-primary text-white' : ''
-                      }`}
-                    >
-                      <span>{option.text}</span>
-                      {option.selected && (
-                        <svg
-                          className="absolute right-2 h-4 w-4 fill-current text-primary"
-                          viewBox="0 0 20 20"
-                          xmlns="http://www.w3.org/2000/svg"
-                        >
-                          <path d="M7.629 12.787L4.218 9.377a1 1 0 0 1 1.414-1.414L8 10.207l8.914-8.914a1 1 0 0 1 1.414 1.414L9.629 12.787a1 1 0 0 1-1.414 0z" />
-                        </svg>
-                      )}
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
           </div>
         </div>
       </div>
