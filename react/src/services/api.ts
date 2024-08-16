@@ -4,8 +4,9 @@ import { Keuangan, TataUsaha } from '../types/arsip';
 // Base URLs for the API endpoints
 const API_URL_KEUANGAN = 'http://127.0.0.1:8000/api/keuangan';
 const API_URL_TU = 'http://localhost:8000/api/tatausaha';
+const API_URL_PEMINJAMAN = 'http://localhost:8000/api/peminjaman';
 
-// Keuangan API Functions
+// KEUANGAN---------------------------------------------------------------------
 export const getKeuangan = () => axios.get<Keuangan[]>(API_URL_KEUANGAN);
 
 export const createKeuangan = async (data: Omit<Keuangan, 'id'>) => {
@@ -28,8 +29,9 @@ export const updateKeuangan = (
 
 export const deleteKeuangan = (id: number) =>
   axios.delete(`${API_URL_KEUANGAN}/${id}`);
+// END OF KEUANGAN--------------------------------------------------------------
 
-// TataUsaha API Functions (if needed)
+// TATA USAHA-------------------------------------------------------------------
 export const getTataUsaha = () => axios.get<TataUsaha[]>(API_URL_TU);
 export const createTataUsaha = async (data: Omit<TataUsaha, 'id'>) => {
   try {
@@ -51,3 +53,25 @@ export const updateTataUsaha = (
 
 export const deleteTataUsaha = (id: number) =>
   axios.delete(`${API_URL_TU}/${id}`);
+// END OF TATA USAHA------------------------------------------------------------
+
+// PEMINJAMAN-------------------------------------------------------------------
+export const fetchPeminjaman = async () => {
+  return await axios.get(`${API_URL_PEMINJAMAN}`);
+};
+export const fetchArsip = async () => {
+  return await axios.get(`${API_URL_PEMINJAMAN}`);
+};
+
+export const createPeminjaman = async (peminjamanData: any) => {
+  return await axios.post(`${API_URL_PEMINJAMAN}`, peminjamanData);
+};
+
+export const updatePeminjaman = async (id: number, peminjamanData: any) => {
+  return await axios.put(`${API_URL_PEMINJAMAN}/${id}`, peminjamanData);
+};
+
+export const fetchPeminjamanDetail = async (id: number) => {
+  return await axios.get(`${API_URL_PEMINJAMAN}/${id}`);
+};
+// END OF PEMINJAMAN------------------------------------------------------------

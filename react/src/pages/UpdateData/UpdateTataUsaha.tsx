@@ -1,29 +1,46 @@
-import React, { useState } from 'react';
-import { createKeuangan, createTataUsaha } from '../../services/api';
-import { Keuangan, TataUsaha } from '../../types/arsip';
-import SelectBidang from '../../components/Forms/SelectGroup/SelectBidang';
+import React, { useEffect, useState } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
+import { getTataUsahaById, updateTataUsaha } from '../../services/api';
+import { TataUsaha } from '../../types/arsip';
 import SelectMonth from '../../components/Forms/SelectGroup/SelectMonth';
 import MultiSelectColors from '../../components/Forms/SelectGroup/MultiSelectColors';
 
-type FormData = Keuangan | TataUsaha;
-
-const TambahData: React.FC = () => {
-  const [formType, setFormType] = useState<'keuangan' | 'tatausaha'>(
-    'keuangan',
-  );
-  const [formData, setFormData] = useState<FormData>({
+const UpdateTataUsaha: React.FC = () => {
+  const { id } = useParams<{ id: string }>();
+  const navigate = useNavigate();
+  const [formData, setFormData] = useState<TataUsaha>({
+    id: undefined,
     no_rak: '',
     no_box: '',
     jenis_arsip: '',
     no_arsip: '',
     bulan: '',
     tahun: '',
-    warna: '',
     jumlah_folder: '',
+    warna: '',
     status: '',
   });
+  const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchTataUsaha = async () => {
+      try {
+        if (id) {
+          const response = await getTataUsahaById(parseInt(id));
+          setFormData(response.data);
+        }
+      } catch (error) {
+        setError('Error fetching tata usaha data');
+        console.error('Error fetching tata usaha data', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchTataUsaha();
+  }, [id]);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
@@ -35,73 +52,34 @@ const TambahData: React.FC = () => {
     setFormData({ ...formData, bulan: e.target.value });
   };
 
-  const handleFormTypeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setFormType(e.target.value as 'keuangan' | 'tatausaha');
-    // Reset form data when form type changes
-    setFormData({
-      no_rak: '',
-      no_box: '',
-      jenis_arsip: '',
-      no_arsip: '',
-      bulan: '',
-      tahun: '',
-      warna: '',
-      jumlah_folder: '',
-      status: '',
-    });
-    setError(null);
-    setSuccess(null);
+  const handleColorChange = (selectedValues: string[]) => {
+    setFormData({ ...formData, warna: selectedValues.join(',') });
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      if (formType === 'keuangan') {
-        await createKeuangan(formData as Keuangan);
-      } else {
-        await createTataUsaha(formData as TataUsaha);
-      }
-      setSuccess(
-        `${
-          formType.charAt(0).toUpperCase() + formType.slice(1)
-        } entry created successfully!`,
-      );
-      setFormData({
-        no_rak: '',
-        no_box: '',
-        jenis_arsip: '',
-        no_arsip: '',
-        bulan: '',
-        tahun: '',
-        warna: '',
-        jumlah_folder: '',
-        status: '',
-      });
-      setError(null);
-    } catch (err) {
-      setError(`Failed to create ${formType}.`);
-      setSuccess(null);
+      await updateTataUsaha(parseInt(id!), formData);
+      setSuccess('Tata Usaha entry updated successfully!');
+      navigate('/tatausaha');
+    } catch (error) {
+      setError('Error updating tata usaha');
+      console.error('Error updating tata usaha', error);
     }
   };
 
-  const handleColorChange = (selectedValues: string[]) => {
-    setFormData({ ...formData, warna: selectedValues.join(',') });
-  };
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p>{error}</p>;
 
   return (
     <div className="flex flex-col gap-9">
       <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
         <div className="border-b border-stroke py-4 px-6.5 dark:border-strokedark">
           <h3 className="font-medium text-black dark:text-white">
-            Tambah Arsip Inaktif Bidang{' '}
-            {formType.charAt(0).toUpperCase() + formType.slice(1)}{' '}
+            Update Arsip Inaktif Bidang Tata Usaha
           </h3>
         </div>
         <form onSubmit={handleSubmit} className="p-6.5">
-          <div className="mb-4.5">
-            <SelectBidang onChange={handleFormTypeChange} />
-          </div>
-
           <div className="mb-4.5 flex flex-col gap-6 xl:flex-row">
             <div className="w-full xl:w-1/2">
               <label className="mb-2.5 block text-black dark:text-white">
@@ -175,7 +153,7 @@ const TambahData: React.FC = () => {
 
           <div className="mb-4.5">
             <MultiSelectColors
-              id="color-select"
+              id="warna"
               value={formData.warna.split(',')}
               onChange={handleColorChange}
             />
@@ -209,7 +187,6 @@ const TambahData: React.FC = () => {
               </option>
               <option value="tersedia">Tersedia</option>
               <option value="tidak tersedia">Tidak Tersedia</option>
-              <option value="dalam proses">Dalam Proses</option>
             </select>
           </div>
 
@@ -217,7 +194,7 @@ const TambahData: React.FC = () => {
             type="submit"
             className="w-full rounded bg-primary p-3 font-medium text-gray hover:bg-opacity-90"
           >
-            Create
+            Update
           </button>
 
           {error && <p className="text-red-500">{error}</p>}
@@ -228,4 +205,4 @@ const TambahData: React.FC = () => {
   );
 };
 
-export default TambahData;
+export default UpdateTataUsaha;

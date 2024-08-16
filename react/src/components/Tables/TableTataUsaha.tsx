@@ -1,35 +1,35 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { getKeuangan, deleteKeuangan } from '../../services/api';
-import { Keuangan } from '../../types/arsip';
+import { getTataUsaha, deleteTataUsaha } from '../../services/api';
+import { TataUsaha } from '../../types/arsip';
 
-const TableKeuangan: React.FC = () => {
-  const [keuangan, setKeuangan] = useState<Keuangan[]>([]);
+const TableTataUsaha: React.FC = () => {
+  const [tataUsaha, setTataUsaha] = useState<TataUsaha[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
-  const history = useNavigate();
+  const navigate = useNavigate();
 
   useEffect(() => {
-    const fetchKeuangan = async () => {
+    const fetchTataUsaha = async () => {
       try {
-        const response = await getKeuangan();
-        setKeuangan(response.data);
+        const response = await getTataUsaha();
+        setTataUsaha(response.data);
       } catch (error) {
-        setError('Error fetching keuangan');
-        console.error('Error fetching keuangan', error);
+        setError('Error fetching tata usaha');
+        console.error('Error fetching tata usaha', error);
       } finally {
         setLoading(false);
       }
     };
 
-    fetchKeuangan();
+    fetchTataUsaha();
   }, []);
 
   const handleDelete = async (id: number | undefined) => {
     if (id !== undefined) {
       try {
-        await deleteKeuangan(id);
-        setKeuangan(keuangan.filter((item) => item.id !== id));
+        await deleteTataUsaha(id);
+        setTataUsaha(tataUsaha.filter((item) => item.id !== id));
       } catch (error) {
         console.error('Error deleting item:', error);
       }
@@ -40,7 +40,7 @@ const TableKeuangan: React.FC = () => {
 
   const handleEditClick = (id: number | undefined) => {
     if (id !== undefined) {
-      history(`/update-keuangan/${id}`);
+      navigate(`/update-tatausaha/${id}`);
     } else {
       console.error('ID is undefined');
     }
@@ -88,7 +88,7 @@ const TableKeuangan: React.FC = () => {
             </tr>
           </thead>
           <tbody>
-            {keuangan.map((item) => (
+            {tataUsaha.map((item) => (
               <tr key={item.id}>
                 <td className="border-b border-[#eee] py-5 px-4 pl-9 dark:border-strokedark xl:pl-11">
                   <h5 className="font-medium text-black dark:text-white">
@@ -158,4 +158,4 @@ const TableKeuangan: React.FC = () => {
   );
 };
 
-export default TableKeuangan;
+export default TableTataUsaha;

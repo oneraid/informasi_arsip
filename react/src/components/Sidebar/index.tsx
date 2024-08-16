@@ -3,6 +3,7 @@ import { NavLink, useLocation } from 'react-router-dom';
 import SidebarLinkGroup from './SidebarLinkGroup';
 import Logo from '../../images/logo/logo jatim.png';
 import MenuDataArsipInaktif from './MenuDataArsipInaktif';
+import MenuPinjamKembali from './MenuPinjamPengembalian';
 
 interface SidebarProps {
   sidebarOpen: boolean;
@@ -165,6 +166,13 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                 setSidebarExpanded={setSidebarExpanded}
               />
               {/* <!-- END Menu Item Data Arsip Inaktif --> */}
+
+              {/* <!-- Menu Item Pinjam Kembali --> */}
+              <MenuPinjamKembali
+                sidebarExpanded={sidebarExpanded}
+                setSidebarExpanded={setSidebarExpanded}
+              />
+              {/* <!-- END Menu Item Pinjam Kembali --> */}
 
               {/* <!-- Menu Item Calendar --> */}
               <li>

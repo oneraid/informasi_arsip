@@ -10,6 +10,7 @@ class Keuangan extends Model
     use HasFactory;
 
     protected $table = 'keuangan';
+
     protected $fillable = [
         'no_rak',
         'no_box',
@@ -26,4 +27,12 @@ class Keuangan extends Model
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
     ];
+
+    /**
+     * Relasi ke model Peminjaman
+     */
+    public function peminjaman()
+    {
+        return $this->hasMany(Peminjaman::class, 'arsip_id');
+    }
 }
