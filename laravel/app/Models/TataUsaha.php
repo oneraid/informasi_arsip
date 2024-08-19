@@ -25,4 +25,9 @@ class TataUsaha extends Model
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
     ];
+
+    public function arsipTU()
+{
+    return $this->belongsTo(TataUsaha::class, 'arsip_id');
+}
 }

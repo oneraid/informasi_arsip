@@ -30,9 +30,7 @@ Route::put('/tatausaha/{id}', [TataUsahaController::class, 'update']);
 Route::delete('/tatausaha/{id}', [TataUsahaController::class, 'destroy']);
 
 
-Route::get('/keuangan', function () {
-    return Keuangan::all(); // Mengembalikan semua arsip tanpa memfilter status
-});
+Route::get('/peminjaman', [PeminjamanController::class, 'index']);
 Route::post('/peminjaman', [PeminjamanController::class, 'store']);
 Route::get('/peminjaman/{id}', [PeminjamanController::class, 'show']);
 Route::put('/peminjaman/{id}', [PeminjamanController::class, 'update']);
