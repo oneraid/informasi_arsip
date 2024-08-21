@@ -209,7 +209,6 @@ const TambahData: React.FC = () => {
               </option>
               <option value="tersedia">Tersedia</option>
               <option value="tidak tersedia">Tidak Tersedia</option>
-              <option value="dalam proses">Dalam Proses</option>
             </select>
           </div>
 
