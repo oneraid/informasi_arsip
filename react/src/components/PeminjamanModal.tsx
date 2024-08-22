@@ -1,4 +1,3 @@
-// PeminjamanModal.tsx
 import React, { useState, useEffect } from 'react';
 import Modal from 'react-modal';
 import { getKeuangan, getTataUsaha } from '../services/api';
@@ -159,8 +158,18 @@ const PeminjamanModal: React.FC<PeminjamanModalProps> = ({
       className="fixed inset-0 z-50 flex items-center justify-center"
       overlayClassName="fixed inset-0 bg-black bg-opacity-50 z-40"
     >
-      <div className="bg-white p-6 rounded-lg shadow-lg z-50 max-w-5xl w-full">
-        <h2 className="text-2xl font-bold mb-4">Peminjaman Modal</h2>
+      <div
+        className="bg-white p-4 md:p-8 rounded-lg shadow-lg z-50 w-full max-w-md md:max-w-3xl lg:max-w-5xl relative"
+        style={{ right: '-6%' }}
+      >
+        {/* Button close di pojok kanan atas */}
+        <button
+          onClick={onRequestClose}
+          className="absolute top-2 right-2 text-gray-500 hover:text-gray-700"
+        >
+          &times;
+        </button>
+        <h2 className="text-lg md:text-2xl font-bold mb-4">Peminjaman Modal</h2>
         <label htmlFor="tableSelect" className="block text-sm font-medium mb-2">
           Select Table:
         </label>
@@ -177,34 +186,34 @@ const PeminjamanModal: React.FC<PeminjamanModalProps> = ({
         </select>
 
         {/* Filters in a single row */}
-        <div className="flex space-x-4 mb-4">
+        <div className="flex flex-wrap sm:flex-nowrap space-y-2 sm:space-y-0 sm:space-x-4 mb-4">
           <input
             type="text"
-            placeholder="Filter by No Rak"
+            placeholder="No Rak"
             value={noRakFilter}
             onChange={(e) => setNoRakFilter(e.target.value)}
-            className="border border-gray-300 rounded-md p-2 w-full"
+            className="border border-gray-300 rounded-md p-1 md:p-2 w-1/2 sm:w-auto flex-grow"
           />
           <input
             type="text"
-            placeholder="Filter by Bulan"
+            placeholder="Bulan"
             value={bulanFilter}
             onChange={(e) => setBulanFilter(e.target.value)}
-            className="border border-gray-300 rounded-md p-2 w-full"
+            className="border border-gray-300 rounded-md p-1 md:p-2 w-1/2 sm:w-auto flex-grow"
           />
           <input
             type="text"
-            placeholder="Filter by Tahun"
+            placeholder="Tahun"
             value={tahunFilter}
             onChange={(e) => setTahunFilter(e.target.value)}
-            className="border border-gray-300 rounded-md p-2 w-full"
+            className="border border-gray-300 rounded-md p-1 md:p-2 w-1/2 sm:w-auto flex-grow"
           />
           <input
             type="text"
-            placeholder="Filter by Jenis Arsip"
+            placeholder="Jenis Arsip"
             value={jenisArsipFilter}
             onChange={(e) => setJenisArsipFilter(e.target.value)}
-            className="border border-gray-300 rounded-md p-2 w-full"
+            className="border border-gray-300 rounded-md p-1 md:p-2 w-1/2 sm:w-auto flex-grow"
           />
         </div>
 
@@ -216,18 +225,20 @@ const PeminjamanModal: React.FC<PeminjamanModalProps> = ({
           renderTable()
         )}
 
-        <button
-          onClick={handleSubmit}
-          className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 mt-4"
-        >
-          Submit
-        </button>
-        <button
-          onClick={onRequestClose}
-          className="bg-gray-500 text-white px-4 py-2 rounded-md hover:bg-gray-600 mt-4 ml-4"
-        >
-          Close Modal
-        </button>
+        <div className="mt-4 flex justify-end space-x-4">
+          <button
+            onClick={handleSubmit}
+            className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
+          >
+            Submit
+          </button>
+          <button
+            onClick={onRequestClose}
+            className="bg-gray-500 text-white px-4 py-2 rounded-md hover:bg-gray-600"
+          >
+            Cancel
+          </button>
+        </div>
       </div>
     </Modal>
   );

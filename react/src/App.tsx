@@ -22,6 +22,7 @@ import TambahData from './pages/TambahData/TambahData';
 import UpdateKeuangan from './pages/UpdateData/UpdateKeuangan';
 import UpdateTataUsaha from './pages/UpdateData/UpdateTataUsaha';
 import Peminjaman from './pages/PeminjamanPengembalian/Peminjaman';
+import Aprroval from './pages/PeminjamanPengembalian/Aprroval';
 
 function App() {
   const [loading, setLoading] = useState<boolean>(true);
@@ -100,6 +101,15 @@ function App() {
             <>
               <PageTitle title="Peminjaman | Bakorwil I Kota Madiun" />
               <Peminjaman />
+            </>
+          }
+        />
+        <Route
+          path="/approval-arsip"
+          element={
+            <>
+              <PageTitle title="Peminjaman | Bakorwil I Kota Madiun" />
+              <Aprroval />
             </>
           }
         />
