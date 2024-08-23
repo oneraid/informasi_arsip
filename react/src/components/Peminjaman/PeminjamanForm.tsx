@@ -1,15 +1,21 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom'; // Import useHistory for navigation
-import PeminjamanModal from '../PeminjamanModal'; // Adjust path as needed
+import { useNavigate } from 'react-router-dom';
+import PeminjamanModal from '../PeminjamanModal';
 
 const Peminjaman: React.FC = () => {
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [selectedItems, setSelectedItems] = useState<any[]>([]);
-  const history = useNavigate(); // Initialize useHistory
+  const [nama, setNama] = useState('');
+  const [noTelp, setNoTelp] = useState('');
+  const [email, setEmail] = useState('');
+  const [tanggalPinjam, setTanggalPinjam] = useState('');
+  const [tanggalKembali, setTanggalKembali] = useState('');
+
+  const history = useNavigate();
 
   const handleSelectItems = (items: any[]) => {
     setSelectedItems(items);
-    setModalIsOpen(false); // Close the modal after submitting
+    setModalIsOpen(false);
   };
 
   const handleRemoveItem = (itemId: number) => {
@@ -19,10 +25,19 @@ const Peminjaman: React.FC = () => {
   };
 
   const handleSubmit = () => {
-    // Save selected items to localStorage
+    const peminjamanData = {
+      nama,
+      noTelp,
+      email,
+      tanggalPinjam,
+      tanggalKembali,
+      items: selectedItems,
+    };
+
+    // Save peminjaman data to localStorage
     localStorage.setItem(
       'selectedPeminjamanItems',
-      JSON.stringify(selectedItems),
+      JSON.stringify(peminjamanData),
     );
 
     // Navigate to the approval page
@@ -46,6 +61,46 @@ const Peminjaman: React.FC = () => {
       />
 
       <div className="mt-6">
+        <h2 className="text-xl font-bold mb-4">Informasi Peminjaman</h2>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
+          <input
+            type="text"
+            placeholder="Nama"
+            value={nama}
+            onChange={(e) => setNama(e.target.value)}
+            className="border border-gray-300 rounded-md p-2 w-full"
+          />
+          <input
+            type="text"
+            placeholder="No Telp"
+            value={noTelp}
+            onChange={(e) => setNoTelp(e.target.value)}
+            className="border border-gray-300 rounded-md p-2 w-full"
+          />
+          <input
+            type="email"
+            placeholder="Email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            className="border border-gray-300 rounded-md p-2 w-full"
+          />
+          <input
+            type="date"
+            placeholder="Tanggal Pinjam"
+            value={tanggalPinjam}
+            onChange={(e) => setTanggalPinjam(e.target.value)}
+            className="border border-gray-300 rounded-md p-2 w-full"
+          />
+          <input
+            type="date"
+            placeholder="Tanggal Kembali"
+            value={tanggalKembali}
+            onChange={(e) => setTanggalKembali(e.target.value)}
+            className="border border-gray-300 rounded-md p-2 w-full"
+          />
+        </div>
+
         <h2 className="text-xl font-bold mb-4">Selected Items</h2>
         {selectedItems.length === 0 ? (
           <p>No items selected</p>
@@ -54,11 +109,9 @@ const Peminjaman: React.FC = () => {
             <table className="min-w-full divide-y divide-gray-200">
               <thead className="bg-gray-50">
                 <tr>
-                  {/* Table headers */}
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     No Rak
                   </th>
-                  {/* Add more headers as needed */}
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Actions
                   </th>
@@ -70,7 +123,6 @@ const Peminjaman: React.FC = () => {
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                       {item.no_rak}
                     </td>
-                    {/* Add more data fields as needed */}
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                       <button
                         onClick={() => handleRemoveItem(item.id)}

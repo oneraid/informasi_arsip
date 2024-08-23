@@ -32,8 +32,8 @@ const UpdateTataUsaha: React.FC = () => {
           setFormData(response.data);
         }
       } catch (error) {
-        setError('Error fetching tata usaha data');
-        console.error('Error fetching tata usaha data', error);
+        setError('Error fetching Tata Usaha data');
+        console.error('Error fetching Tata Usaha data', error);
       } finally {
         setLoading(false);
       }
@@ -61,10 +61,10 @@ const UpdateTataUsaha: React.FC = () => {
     try {
       await updateTataUsaha(parseInt(id!), formData);
       setSuccess('Tata Usaha entry updated successfully!');
-      navigate('/tatausaha');
+      navigate('/data/tata-usaha');
     } catch (error) {
-      setError('Error updating tata usaha');
-      console.error('Error updating tata usaha', error);
+      setError('Error updating Tata Usaha');
+      console.error('Error updating Tata Usaha', error);
     }
   };
 
@@ -80,6 +80,7 @@ const UpdateTataUsaha: React.FC = () => {
           </h3>
         </div>
         <form onSubmit={handleSubmit} className="p-6.5">
+          {/* Same input fields as Keuangan, with Tata Usaha specific names */}
           <div className="mb-4.5 flex flex-col gap-6 xl:flex-row">
             <div className="w-full xl:w-1/2">
               <label className="mb-2.5 block text-black dark:text-white">

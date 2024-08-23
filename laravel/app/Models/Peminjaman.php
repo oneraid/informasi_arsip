@@ -12,19 +12,26 @@ class Peminjaman extends Model
     protected $table = 'peminjaman';
 
     protected $fillable = [
-        'arsip_id',
-        'nama_peminjam',
-        'kontak_peminjam',
-        'tanggal_pinjam',
-        'tanggal_kembali',
+        'nama',              // Nama peminjam
+        'nomor_telepon',     // Nomor telepon peminjam
+        'email',             // Email peminjam
+        'arsip_id',          // ID dari arsip yang dipinjam (Keuangan atau TataUsaha)
+        'arsip_type',        // Nama model, bisa 'App\Models\Keuangan' atau 'App\Models\TataUsaha'
+        'tanggal_peminjaman',
+        'tanggal_pengembalian',
         'status',
+        'keterangan',
     ];
 
-    /**
-     * Relasi ke model Keuangan
-     */
+    protected $casts = [
+        'tanggal_peminjaman' => 'datetime',
+        'tanggal_pengembalian' => 'datetime',
+        'created_at' => 'datetime',
+        'updated_at' => 'datetime',
+    ];
+
     public function arsip()
     {
-        return $this->belongsTo(Keuangan::class, 'arsip_id');
+        return $this->morphTo();
     }
 }

@@ -35,3 +35,12 @@ Route::post('/peminjaman', [PeminjamanController::class, 'store']);
 Route::get('/peminjaman/{id}', [PeminjamanController::class, 'show']);
 Route::put('/peminjaman/{id}', [PeminjamanController::class, 'update']);
 Route::delete('/peminjaman/{id}', [PeminjamanController::class, 'destroy']);
+
+
+Route::get('peminjaman', [PeminjamanController::class, 'index'])->name('peminjaman.index');
+Route::get('peminjaman/create', [PeminjamanController::class, 'create'])->name('peminjaman.create');
+Route::post('peminjaman', [PeminjamanController::class, 'store'])->name('peminjaman.store');
+Route::get('peminjaman/{peminjaman}/edit', [PeminjamanController::class, 'edit'])->name('peminjaman.edit');
+Route::put('peminjaman/{peminjaman}', [PeminjamanController::class, 'update'])->name('peminjaman.update');
+Route::delete('peminjaman/{peminjaman}', [PeminjamanController::class, 'destroy'])->name('peminjaman.destroy');
+

@@ -13,23 +13,20 @@ return new class extends Migration
     {
         Schema::create('peminjaman', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('arsip_id'); // Foreign key ke tabel keuangan atau arsip lainnya
-            $table->string('nama_peminjam'); // Nama peminjam arsip
-            $table->string('kontak_peminjam')->nullable(); // Kontak peminjam, misalnya nomor telepon atau email
-            $table->timestamp('tanggal_pinjam')->nullable(); // Tanggal peminjaman
-            $table->timestamp('tanggal_kembali')->nullable(); // Tanggal pengembalian
-            $table->enum('status', ['dipinjam', 'dikembalikan'])->default('dipinjam'); // Status peminjaman
+            $table->string('nama'); // Nama peminjam
+            $table->string('nomor_telepon'); // Nomor telepon peminjam
+            $table->string('email'); // Email peminjam
+            $table->unsignedBigInteger('arsip_id');
+            $table->string('arsip_type'); // Menyimpan jenis arsip, seperti 'App\Models\Keuangan' atau 'App\Models\TataUsaha'
+            $table->date('tanggal_peminjaman');
+            $table->date('tanggal_pengembalian')->nullable();
+            $table->string('status'); // Contoh: 'Dipinjam', 'Dikembalikan', dll.
+            $table->text('keterangan')->nullable();
             $table->timestamps();
-
-            // Relasi ke tabel keuangan atau arsip lainnya
-            $table->foreign('arsip_id')->references('id')->on('keuangan')->onDelete('cascade');
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
-    public function down(): void
+    public function down()
     {
         Schema::dropIfExists('peminjaman');
     }

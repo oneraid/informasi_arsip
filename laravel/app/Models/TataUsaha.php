@@ -26,8 +26,9 @@ class TataUsaha extends Model
         'updated_at' => 'datetime',
     ];
 
-    public function arsipTU()
-{
-    return $this->belongsTo(TataUsaha::class, 'arsip_id');
-}
+    public function peminjaman()
+    {
+        return $this->morphMany(Peminjaman::class, 'arsip');
+    }
+
 }

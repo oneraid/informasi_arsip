@@ -61,7 +61,7 @@ const UpdateKeuangan: React.FC = () => {
     try {
       await updateKeuangan(parseInt(id!), formData);
       setSuccess('Keuangan entry updated successfully!');
-      navigate('/keuangan');
+      navigate('/data/keuangan');
     } catch (error) {
       setError('Error updating keuangan');
       console.error('Error updating keuangan', error);

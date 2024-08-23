@@ -28,11 +28,9 @@ class Keuangan extends Model
         'updated_at' => 'datetime',
     ];
 
-    /**
-     * Relasi ke model Peminjaman
-     */
     public function peminjaman()
     {
-        return $this->hasMany(Peminjaman::class, 'arsip_id');
+        return $this->morphMany(Peminjaman::class, 'arsip');
     }
+
 }

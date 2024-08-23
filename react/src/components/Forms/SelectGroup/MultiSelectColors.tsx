@@ -118,10 +118,10 @@ const MultiSelectColors: React.FC<MultiSelectColorsProps> = ({
       </label>
       <div>
         <select className="hidden" id={id}>
-          <option value="M">Merah</option>
-          <option value="P">Putih</option>
-          <option value="H">Hijau</option>
-          <option value="K">Kuning</option>
+          <option value="Merah">Merah</option>
+          <option value="Putih">Putih</option>
+          <option value="Hijau">Hijau</option>
+          <option value="Kuning">Kuning</option>
         </select>
 
         <div className="flex flex-col items-center">
