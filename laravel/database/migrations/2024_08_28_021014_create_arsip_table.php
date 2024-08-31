@@ -11,16 +11,17 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('tatausaha', function (Blueprint $table) {
+        Schema::create('arsip', function (Blueprint $table) {
             $table->id();
             $table->string('no_rak');
             $table->string('no_box');
+            $table->string('bidang');
             $table->string('jenis_arsip');
             $table->string('no_arsip');
             $table->string('bulan');
             $table->string('tahun');
-            $table->string('warna');
-            $table->string('jumlah_folder');
+            $table->string('warna')->nullable();
+            $table->string('jumlah');
             $table->string('status');
             $table->timestamps();
         });
@@ -31,6 +32,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('tatausaha');
+        Schema::dropIfExists('arsip');
     }
 };

@@ -1,16 +1,13 @@
 import React from 'react';
 import PeminjamanForm from '../../components/Peminjaman/PeminjamanForm';
-import PeminjamanList from '../../components/Peminjaman/PeminjamanList';
+import Pengembalian from '../../components/Peminjaman/Pengembalian';
 
 const Peminjaman: React.FC = () => {
   return (
     <div>
       <div>
-        <h1>Manajemen Peminjaman</h1>
-        <PeminjamanForm />
-      </div>
-      <div>
-        <PeminjamanList />
+        <h1>Manajemen Pengembalian</h1>
+        <Pengembalian />
       </div>
     </div>
   );

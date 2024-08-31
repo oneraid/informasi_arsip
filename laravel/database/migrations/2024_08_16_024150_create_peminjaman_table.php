@@ -13,15 +13,12 @@ return new class extends Migration
     {
         Schema::create('peminjaman', function (Blueprint $table) {
             $table->id();
-            $table->string('nama'); // Nama peminjam
-            $table->string('nomor_telepon'); // Nomor telepon peminjam
-            $table->string('email'); // Email peminjam
-            $table->unsignedBigInteger('arsip_id');
-            $table->string('arsip_type'); // Menyimpan jenis arsip, seperti 'App\Models\Keuangan' atau 'App\Models\TataUsaha'
-            $table->date('tanggal_peminjaman');
-            $table->date('tanggal_pengembalian')->nullable();
-            $table->string('status'); // Contoh: 'Dipinjam', 'Dikembalikan', dll.
-            $table->text('keterangan')->nullable();
+            $table->string('nama');
+            $table->string('no_telp', 15);
+            $table->string('email');
+            $table->date('tanggal_pinjam');
+            $table->date('tanggal_kembali')->nullable();
+            $table->string('status');
             $table->timestamps();
         });
     }

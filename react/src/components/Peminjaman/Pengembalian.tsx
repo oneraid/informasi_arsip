@@ -2,14 +2,14 @@ import React, { useEffect, useState } from 'react';
 import { Peminjaman } from '../../types/arsip';
 import { getPeminjaman, deletePeminjaman } from '../../services/arsipApi';
 
-const PeminjamanList: React.FC = () => {
+const Pengembalian: React.FC = () => {
   const [peminjaman, setPeminjaman] = useState<Peminjaman[]>([]);
 
   useEffect(() => {
     const fetchData = async () => {
       const data = await getPeminjaman();
       // Filter out only the 'Pending' status items
-      const pendingPeminjaman = data.filter((p) => p.status === 'Pending');
+      const pendingPeminjaman = data.filter((p) => p.status === 'Dipinjam');
       setPeminjaman(pendingPeminjaman);
     };
 
@@ -75,4 +75,4 @@ const PeminjamanList: React.FC = () => {
   );
 };
 
-export default PeminjamanList;
+export default Pengembalian;

@@ -1,22 +1,23 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { getKeuanganById, updateKeuangan } from '../../services/api';
-import { Keuangan } from '../../types/arsip';
+import { getArsipById, updateArsip } from '../../services/arsipApi';
+import { Arsip } from '../../types/arsip';
 import SelectMonth from '../../components/Forms/SelectGroup/SelectMonth';
 import MultiSelectColors from '../../components/Forms/SelectGroup/MultiSelectColors';
 
-const UpdateKeuangan: React.FC = () => {
+const UpdateArsip: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const [formData, setFormData] = useState<Keuangan>({
+  const [formData, setFormData] = useState<Arsip>({
     id: undefined,
     no_rak: '',
     no_box: '',
+    bidang: '',
     jenis_arsip: '',
     no_arsip: '',
     bulan: '',
     tahun: '',
-    jumlah_folder: '',
+    jumlah: '',
     warna: '',
     status: '',
   });
@@ -25,21 +26,21 @@ const UpdateKeuangan: React.FC = () => {
   const [success, setSuccess] = useState<string | null>(null);
 
   useEffect(() => {
-    const fetchKeuangan = async () => {
+    const fetchArsip = async () => {
       try {
         if (id) {
-          const response = await getKeuanganById(parseInt(id));
-          setFormData(response.data);
+          const response = await getArsipById(parseInt(id));
+          setFormData(response); // Directly assign the response to formData
         }
       } catch (error) {
-        setError('Error fetching keuangan data');
-        console.error('Error fetching keuangan data', error);
+        setError('Error fetching arsip data');
+        console.error('Error fetching arsip data', error);
       } finally {
         setLoading(false);
       }
     };
 
-    fetchKeuangan();
+    fetchArsip();
   }, [id]);
 
   const handleChange = (
@@ -59,12 +60,14 @@ const UpdateKeuangan: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      await updateKeuangan(parseInt(id!), formData);
-      setSuccess('Keuangan entry updated successfully!');
-      navigate('/data/keuangan');
+      if (id) {
+        await updateArsip(parseInt(id), formData);
+        setSuccess('Arsip entry updated successfully!');
+        navigate(-1); // Kembali ke halaman sebelumnya
+      }
     } catch (error) {
-      setError('Error updating keuangan');
-      console.error('Error updating keuangan', error);
+      setError('Error updating arsip');
+      console.error('Error updating arsip', error);
     }
   };
 
@@ -164,8 +167,8 @@ const UpdateKeuangan: React.FC = () => {
               Jumlah Folder
             </label>
             <input
-              name="jumlah_folder"
-              value={formData.jumlah_folder}
+              name="jumlah"
+              value={formData.jumlah}
               onChange={handleChange}
               placeholder="Jumlah folder"
               className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 text-black outline-none transition focus:border-primary dark:border-form-strokedark dark:bg-form-input dark:text-white"
@@ -205,4 +208,4 @@ const UpdateKeuangan: React.FC = () => {
   );
 };
 
-export default UpdateKeuangan;
+export default UpdateArsip;

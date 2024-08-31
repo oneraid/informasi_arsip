@@ -5,30 +5,28 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class TataUsaha extends Model
+class Arsip extends Model
 {
     use HasFactory;
-    protected $table = 'tatausaha';
+
+    protected $table = 'arsip';
+
     protected $fillable = [
         'no_rak',
         'no_box',
+        'bidang',
         'jenis_arsip',
         'no_arsip',
         'bulan',
         'tahun',
         'warna',
-        'jumlah_folder',
+        'jumlah',
         'status',
-    ];
-
-    protected $casts = [
-        'created_at' => 'datetime',
-        'updated_at' => 'datetime',
     ];
 
     public function peminjaman()
     {
-        return $this->morphMany(Peminjaman::class, 'arsip');
+        return $this->belongsToMany(Peminjaman::class, 'arsip_peminjaman')
+                    ->withTimestamps(); // Pivot table name is 'arsip_peminjaman'
     }
-
 }

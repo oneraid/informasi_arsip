@@ -1,25 +1,21 @@
 import React, { useState } from 'react';
-import { createKeuangan, createTataUsaha } from '../../services/api';
-import { Keuangan, TataUsaha } from '../../types/arsip';
+import { createArsip } from '../../services/arsipApi';
+import { Arsip } from '../../types/arsip';
 import SelectBidang from '../../components/Forms/SelectGroup/SelectBidang';
 import SelectMonth from '../../components/Forms/SelectGroup/SelectMonth';
 import MultiSelectColors from '../../components/Forms/SelectGroup/MultiSelectColors';
 
-type FormData = Keuangan | TataUsaha;
-
-const TambahData: React.FC = () => {
-  const [formType, setFormType] = useState<'keuangan' | 'tatausaha'>(
-    'keuangan',
-  );
-  const [formData, setFormData] = useState<FormData>({
+const CreateArsip: React.FC = () => {
+  const [formData, setFormData] = useState<Arsip>({
     no_rak: '',
     no_box: '',
+    bidang: '',
     jenis_arsip: '',
     no_arsip: '',
     bulan: '',
     tahun: '',
     warna: '',
-    jumlah_folder: '',
+    jumlah: '', // Updated to match the field name
     status: '',
   });
   const [error, setError] = useState<string | null>(null);
@@ -28,64 +24,46 @@ const TambahData: React.FC = () => {
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
   ) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+
+    // If the input is a number, convert to string to prevent issues with scientific notation
+    setFormData({ ...formData, [name]: value });
   };
 
   const handleMonthChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setFormData({ ...formData, bulan: e.target.value });
   };
 
-  const handleFormTypeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setFormType(e.target.value as 'keuangan' | 'tatausaha');
-    // Reset form data when form type changes
-    setFormData({
-      no_rak: '',
-      no_box: '',
-      jenis_arsip: '',
-      no_arsip: '',
-      bulan: '',
-      tahun: '',
-      warna: '',
-      jumlah_folder: '',
-      status: '',
-    });
-    setError(null);
-    setSuccess(null);
+  const handleBidangChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setFormData({ ...formData, bidang: e.target.value });
+  };
+
+  const handleColorChange = (selectedValues: string[]) => {
+    setFormData({ ...formData, warna: selectedValues.join(',') });
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      if (formType === 'keuangan') {
-        await createKeuangan(formData as Keuangan);
-      } else {
-        await createTataUsaha(formData as TataUsaha);
-      }
-      setSuccess(
-        `${
-          formType.charAt(0).toUpperCase() + formType.slice(1)
-        } entry created successfully!`,
-      );
+      await createArsip(formData);
+      setSuccess('Arsip created successfully!');
       setFormData({
         no_rak: '',
         no_box: '',
+        bidang: '',
         jenis_arsip: '',
         no_arsip: '',
         bulan: '',
         tahun: '',
         warna: '',
-        jumlah_folder: '',
+        jumlah: '', // Reset the field
         status: '',
       });
       setError(null);
     } catch (err) {
-      setError(`Failed to create ${formType}.`);
+      setError('Failed to create Arsip.');
       setSuccess(null);
     }
-  };
-
-  const handleColorChange = (selectedValues: string[]) => {
-    setFormData({ ...formData, warna: selectedValues.join(',') });
   };
 
   return (
@@ -93,15 +71,10 @@ const TambahData: React.FC = () => {
       <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
         <div className="border-b border-stroke py-4 px-6.5 dark:border-strokedark">
           <h3 className="font-medium text-black dark:text-white">
-            Tambah Arsip Inaktif Bidang{' '}
-            {formType.charAt(0).toUpperCase() + formType.slice(1)}{' '}
+            Create Arsip
           </h3>
         </div>
         <form onSubmit={handleSubmit} className="p-6.5">
-          <div className="mb-4.5">
-            <SelectBidang onChange={handleFormTypeChange} />
-          </div>
-
           <div className="mb-4.5 flex flex-col gap-6 xl:flex-row">
             <div className="w-full xl:w-1/2">
               <label className="mb-2.5 block text-black dark:text-white">
@@ -128,6 +101,13 @@ const TambahData: React.FC = () => {
                 className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 text-black outline-none transition focus:border-primary dark:border-form-strokedark dark:bg-form-input dark:text-white"
               />
             </div>
+          </div>
+
+          <div className="mb-4.5">
+            <SelectBidang
+              value={formData.bidang}
+              onChange={handleBidangChange}
+            />
           </div>
 
           <div className="mb-4.5">
@@ -169,6 +149,7 @@ const TambahData: React.FC = () => {
               value={formData.tahun}
               onChange={handleChange}
               placeholder="Tahun"
+              type="number" // Added type number for year input
               className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 text-black outline-none transition focus:border-primary dark:border-form-strokedark dark:bg-form-input dark:text-white"
             />
           </div>
@@ -186,10 +167,12 @@ const TambahData: React.FC = () => {
               Jumlah Folder
             </label>
             <input
-              name="jumlah_folder"
-              value={formData.jumlah_folder}
+              name="jumlah"
+              value={formData.jumlah}
               onChange={handleChange}
               placeholder="Jumlah folder"
+              type="number" // Changed to text to avoid issues with scientific notation
+              inputMode="numeric" // Ensures only numeric input on mobile devices
               className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 text-black outline-none transition focus:border-primary dark:border-form-strokedark dark:bg-form-input dark:text-white"
             />
           </div>
@@ -227,4 +210,4 @@ const TambahData: React.FC = () => {
   );
 };
 
-export default TambahData;
+export default CreateArsip;

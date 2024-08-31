@@ -1,23 +1,20 @@
 import React, { useState, useEffect } from 'react';
 import Modal from 'react-modal';
-import { getKeuangan, getTataUsaha } from '../services/api';
+import { getArsip } from '../../services/arsipApi'; // Pastikan Anda sudah memiliki API untuk mendapatkan arsip
 
 Modal.setAppElement('#root');
 
-interface PeminjamanModalProps {
+interface ArsipModalProps {
   isOpen: boolean;
   onRequestClose: () => void;
   onSelectItems: (items: any[]) => void;
 }
 
-const PeminjamanModal: React.FC<PeminjamanModalProps> = ({
+const ArsipModal: React.FC<ArsipModalProps> = ({
   isOpen,
   onRequestClose,
   onSelectItems,
 }) => {
-  const [selectedTable, setSelectedTable] = useState<'keuangan' | 'tatausaha'>(
-    'keuangan',
-  );
   const [data, setData] = useState<any[]>([]);
   const [filteredData, setFilteredData] = useState<any[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
@@ -34,11 +31,7 @@ const PeminjamanModal: React.FC<PeminjamanModalProps> = ({
       setLoading(true);
       setError(null);
       try {
-        const response =
-          selectedTable === 'keuangan'
-            ? await getKeuangan()
-            : await getTataUsaha();
-
+        const response = await getArsip();
         if (response && response.data) {
           setData(response.data);
           setFilteredData(response.data); // Initialize filtered data
@@ -54,7 +47,7 @@ const PeminjamanModal: React.FC<PeminjamanModalProps> = ({
     };
 
     fetchData();
-  }, [selectedTable]);
+  }, []);
 
   useEffect(() => {
     const lowerNoRak = noRakFilter.toLowerCase();
@@ -163,8 +156,8 @@ const PeminjamanModal: React.FC<PeminjamanModalProps> = ({
     <Modal
       isOpen={isOpen}
       onRequestClose={onRequestClose}
-      contentLabel="Peminjaman Modal"
-      className="fixed inset-0 z-50 flex items-center justify-center"
+      contentLabel="Arsip Modal"
+      className="fixed inset-0 z-50 flex items-center justify-center overflow-hidden"
       overlayClassName="fixed inset-0 bg-black bg-opacity-50 z-40"
     >
       <div
@@ -177,21 +170,7 @@ const PeminjamanModal: React.FC<PeminjamanModalProps> = ({
         >
           &times;
         </button>
-        <h2 className="text-lg md:text-2xl font-bold mb-4">Peminjaman Modal</h2>
-        <label htmlFor="tableSelect" className="block text-sm font-medium mb-2">
-          Select Table:
-        </label>
-        <select
-          id="tableSelect"
-          value={selectedTable}
-          onChange={(e) =>
-            setSelectedTable(e.target.value as 'keuangan' | 'tatausaha')
-          }
-          className="border border-gray-300 rounded-md p-2 w-full mb-4"
-        >
-          <option value="keuangan">Keuangan</option>
-          <option value="tatausaha">Tata Usaha</option>
-        </select>
+        <h2 className="text-lg md:text-2xl font-bold mb-4">Arsip Modal</h2>
 
         {/* Filters */}
         <div className="flex flex-wrap sm:flex-nowrap space-y-2 sm:space-y-0 sm:space-x-4 mb-4">
@@ -231,7 +210,7 @@ const PeminjamanModal: React.FC<PeminjamanModalProps> = ({
         ) : error ? (
           <p className="text-red-500">{error}</p>
         ) : (
-          renderTable()
+          <div className="overflow-x-auto max-h-80">{renderTable()}</div>
         )}
 
         <div className="mt-4 flex justify-end space-x-4">
@@ -253,4 +232,4 @@ const PeminjamanModal: React.FC<PeminjamanModalProps> = ({
   );
 };
 
-export default PeminjamanModal;
+export default ArsipModal;

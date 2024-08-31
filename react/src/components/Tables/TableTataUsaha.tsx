@@ -1,35 +1,38 @@
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { getTataUsaha, deleteTataUsaha } from '../../services/api';
-import { TataUsaha } from '../../types/arsip';
+import { getArsip, deleteArsip } from '../../services/arsipApi';
+import { Arsip } from '../../types/arsip';
 
 const TableTataUsaha: React.FC = () => {
-  const [tataUsaha, setTataUsaha] = useState<TataUsaha[]>([]);
+  const [data, setData] = useState<Arsip[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
 
   useEffect(() => {
-    const fetchTataUsaha = async () => {
+    // Fetch data from API
+    const fetchData = async () => {
       try {
-        const response = await getTataUsaha();
-        setTataUsaha(response.data);
-      } catch (error) {
-        setError('Error fetching tata usaha');
-        console.error('Error fetching tata usaha', error);
+        const response = await getArsip();
+        const TataUsahaData = response.data.filter(
+          (item: Arsip) => item.bidang === 'Tata Usaha',
+        );
+        setData(TataUsahaData);
+      } catch (err) {
+        setError('Failed to fetch data.');
       } finally {
         setLoading(false);
       }
     };
 
-    fetchTataUsaha();
+    fetchData();
   }, []);
 
   const handleDelete = async (id: number | undefined) => {
     if (id !== undefined) {
       try {
-        await deleteTataUsaha(id);
-        setTataUsaha(tataUsaha.filter((item) => item.id !== id));
+        await deleteArsip(id);
+        setData(data.filter((item) => item.id !== id)); // Filter out deleted item
       } catch (error) {
         console.error('Error deleting item:', error);
       }
@@ -40,14 +43,14 @@ const TableTataUsaha: React.FC = () => {
 
   const handleEditClick = (id: number | undefined) => {
     if (id !== undefined) {
-      navigate(`/update-tatausaha/${id}`);
+      navigate(`/update-arsip/${id}`);
     } else {
       console.error('ID is undefined');
     }
   };
 
   if (loading) return <p>Loading...</p>;
-  if (error) return <p>{error}</p>;
+  if (error) return <p className="text-red-500">{error}</p>;
 
   return (
     <div className="rounded-sm border border-stroke bg-white px-5 pt-6 pb-2.5 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-1">
@@ -55,10 +58,10 @@ const TableTataUsaha: React.FC = () => {
         <table className="w-full table-auto">
           <thead>
             <tr className="bg-gray-2 text-left dark:bg-meta-4">
-              <th className="min-w-[150px] py-4 px-4 font-medium text-black dark:text-white xl:pl-11">
+              <th className="min-w-[100px] py-4 px-4 font-medium text-black dark:text-white">
                 No Rak
               </th>
-              <th className="min-w-[150px] py-4 px-4 font-medium text-black dark:text-white">
+              <th className="min-w-[100px] py-4 px-0 font-medium text-black dark:text-white">
                 No Box
               </th>
               <th className="min-w-[150px] py-4 px-4 font-medium text-black dark:text-white">
@@ -87,38 +90,32 @@ const TableTataUsaha: React.FC = () => {
               </th>
             </tr>
           </thead>
-          <tbody>
-            {tataUsaha.map((item) => (
+          <tbody className="bg-white divide-y divide-gray-200">
+            {data.map((item) => (
               <tr key={item.id}>
-                <td className="border-b border-[#eee] py-5 px-4 pl-9 dark:border-strokedark xl:pl-11">
-                  <h5 className="font-medium text-black dark:text-white">
-                    {item.no_rak}
-                  </h5>
+                <td className="border-b border-[#eee] py-5 px-8 dark:border-strokedark">
+                  {item.no_rak}
                 </td>
                 <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-                  <p className="text-black dark:text-white">{item.no_box}</p>
+                  {item.no_box}
                 </td>
                 <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-                  <p className="text-black dark:text-white">
-                    {item.jenis_arsip}
-                  </p>
+                  {item.jenis_arsip}
                 </td>
                 <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-                  <p className="text-black dark:text-white">{item.no_arsip}</p>
+                  {item.no_arsip}
                 </td>
                 <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-                  <p className="text-black dark:text-white">{item.bulan}</p>
+                  {item.bulan}
                 </td>
                 <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-                  <p className="text-black dark:text-white">{item.tahun}</p>
+                  {item.tahun}
+                </td>
+                <td className="border-b border-[#eee] py-5 px-15 dark:border-strokedark">
+                  {item.jumlah}
                 </td>
                 <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-                  <p className="text-black dark:text-white">
-                    {item.jumlah_folder}
-                  </p>
-                </td>
-                <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-                  <p className="text-black dark:text-white">{item.warna}</p>
+                  {item.warna}
                 </td>
                 <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
                   <p

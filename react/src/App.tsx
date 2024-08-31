@@ -19,10 +19,10 @@ import DefaultLayout from './layout/DefaultLayout';
 import Keuangan from './pages/DataArsip/Keuangan';
 import TataUsaha from './pages/DataArsip/TataUsaha';
 import TambahData from './pages/TambahData/TambahData';
-import UpdateKeuangan from './pages/UpdateData/UpdateKeuangan';
-import UpdateTataUsaha from './pages/UpdateData/UpdateTataUsaha';
+import UpdateArsip from './pages/UpdateData/UpdateArsip';
 import Peminjaman from './pages/PeminjamanPengembalian/Peminjaman';
 import Aprroval from './pages/PeminjamanPengembalian/Aprroval';
+import Pengembalian from './pages/PeminjamanPengembalian/Pengembalian';
 
 function App() {
   const [loading, setLoading] = useState<boolean>(true);
@@ -60,11 +60,11 @@ function App() {
           }
         />
         <Route
-          path="/update-keuangan/:id"
+          path="/update-arsip/:id"
           element={
             <>
               <PageTitle title="Update Data | Bakorwil I Kota Madiun" />
-              <UpdateKeuangan />
+              <UpdateArsip />
             </>
           }
         />
@@ -87,20 +87,20 @@ function App() {
           }
         />
         <Route
-          path="/update-tatausaha/:id"
-          element={
-            <>
-              <PageTitle title="Keuangan | Bakorwil I Kota Madiun" />
-              <UpdateTataUsaha />
-            </>
-          }
-        />
-        <Route
           path="/peminjaman-arsip"
           element={
             <>
               <PageTitle title="Peminjaman | Bakorwil I Kota Madiun" />
               <Peminjaman />
+            </>
+          }
+        />
+        <Route
+          path="/pengembalian-arsip"
+          element={
+            <>
+              <PageTitle title="Peminjaman | Bakorwil I Kota Madiun" />
+              <Pengembalian />
             </>
           }
         />

@@ -2,80 +2,96 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\Peminjaman;
-use App\Models\Keuangan;
-use App\Models\TataUsaha;
+use App\Models\Arsip;
+use Illuminate\Http\Request;
 
 class PeminjamanController extends Controller
 {
-    // Menampilkan daftar peminjaman
+    // Get all peminjaman records
     public function index()
     {
         $peminjaman = Peminjaman::with('arsip')->get();
-        return view('peminjaman.index', compact('peminjaman'));
+        return response()->json($peminjaman);
     }
 
-    // Menampilkan formulir untuk membuat peminjaman baru
-    public function create()
-    {
-        $keuangan = Keuangan::all();
-        $tataUsaha = TataUsaha::all();
-        return view('peminjaman.create', compact('keuangan', 'tataUsaha'));
-    }
-
-    // Menyimpan peminjaman baru ke database
+    // Store a new peminjaman record
     public function store(Request $request)
     {
-        $validatedData = $request->validate([
-            'nama' => 'required|string',
-            'nomor_telepon' => 'required|string',
-            'email' => 'required|email',
-            'arsip_id' => 'required|integer',
-            'arsip_type' => 'required|string',
-            'tanggal_peminjaman' => 'required|date',
-            'tanggal_pengembalian' => 'nullable|date',
-            'status' => 'required|string',
-            'keterangan' => 'nullable|string',
-        ]);
+        try {
+            $validatedData = $request->validate([
+                'nama' => 'required|string|max:255',
+                'no_telp' => 'required|string|max:15',
+                'email' => 'required|email|max:255',
+                'tanggal_pinjam' => 'required|date',
+                'tanggal_kembali' => 'nullable|date',
+                'status' => 'required|string|max:50',
+                'arsip_ids' => 'required|array',
+                'arsip_ids.*' => 'exists:arsip,id',
+            ]);
 
-        Peminjaman::create($validatedData);
+            // Create the peminjaman record
+            $peminjaman = Peminjaman::create($validatedData);
 
-        return redirect()->route('peminjaman.index')->with('success', 'Peminjaman berhasil ditambahkan.');
+            // Attach the selected arsip to the peminjaman
+            $peminjaman->arsip()->attach($validatedData['arsip_ids']);
+
+            return response()->json($peminjaman->load('arsip'), 201);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            // Return a JSON response with validation error details
+            return response()->json([
+                'message' => 'Validation failed',
+                'errors' => $e->errors(),
+            ], 422);
+        } catch (\Exception $e) {
+            // Catch any other exceptions and return a generic error message
+            return response()->json([
+                'message' => 'An error occurred while processing the request',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
     }
 
-    // Menampilkan formulir untuk mengedit peminjaman
-    public function edit(Peminjaman $peminjaman)
+
+
+    // Show a specific peminjaman record
+    public function show($id)
     {
-        $keuangan = Keuangan::all();
-        $tataUsaha = TataUsaha::all();
-        return view('peminjaman.edit', compact('peminjaman', 'keuangan', 'tataUsaha'));
+        $peminjaman = Peminjaman::with('arsip')->findOrFail($id);
+        return response()->json($peminjaman);
     }
 
-    // Memperbarui peminjaman di database
-    public function update(Request $request, Peminjaman $peminjaman)
+    // Update a peminjaman record
+    public function update(Request $request, $id)
     {
+        $peminjaman = Peminjaman::findOrFail($id);
+
         $validatedData = $request->validate([
-            'nama' => 'required|string',
-            'nomor_telepon' => 'required|string',
-            'email' => 'required|email',
-            'arsip_id' => 'required|integer',
-            'arsip_type' => 'required|string',
-            'tanggal_peminjaman' => 'required|date',
-            'tanggal_pengembalian' => 'nullable|date',
-            'status' => 'required|string',
-            'keterangan' => 'nullable|string',
+            'nama' => 'required|string|max:255',
+            'no_telp' => 'required|string|max:15',
+            'email' => 'required|email|max:255',
+            'tanggal_pinjam' => 'required|date',
+            'tanggal_kembali' => 'nullable|date',
+            'status' => 'required|string|max:50',
+            'arsip_ids' => 'required|array',
+            'arsip_ids.*' => 'exists:arsip,id',
         ]);
 
         $peminjaman->update($validatedData);
 
-        return redirect()->route('peminjaman.index')->with('success', 'Peminjaman berhasil diperbarui.');
+        // Sync the selected arsip with the peminjaman
+        $peminjaman->arsip()->sync($validatedData['arsip_ids']);
+
+        return response()->json($peminjaman->load('arsip'));
     }
 
-    // Menghapus peminjaman dari database
-    public function destroy(Peminjaman $peminjaman)
+    // Delete a peminjaman record
+    public function destroy($id)
     {
+        $peminjaman = Peminjaman::findOrFail($id);
+        $peminjaman->arsip()->detach();
         $peminjaman->delete();
-        return redirect()->route('peminjaman.index')->with('success', 'Peminjaman berhasil dihapus.');
+
+        return response()->json(['message' => 'Peminjaman deleted successfully.']);
     }
 }
