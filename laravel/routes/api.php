@@ -1,9 +1,12 @@
+<!-- routes/api.php -->
 <?php
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PeminjamanController;
 use App\Http\Controllers\ArsipController;
+use App\Http\Controllers\DocumentExportController;
+
 
 Route::get('/user', function (Request $request) {
     return $request->user();
@@ -16,6 +19,9 @@ Route::prefix('peminjaman')->group(function () {
     Route::get('/{id}', [PeminjamanController::class, 'show']);
     Route::put('/{id}', [PeminjamanController::class, 'update']);
     Route::delete('/{id}', [PeminjamanController::class, 'destroy']);
+    Route::get('/{id}/export', [PeminjamanController::class, 'exportToWord']);
+    Route::post('/export', [PeminjamanController::class, 'storeAndExport']);
+
 });
 
 Route::prefix('arsip')->group(function () {
@@ -24,8 +30,8 @@ Route::prefix('arsip')->group(function () {
     Route::get('/{id}', [ArsipController::class, 'show']);  // Menampilkan detail peminjaman
     Route::put('/{id}', [ArsipController::class, 'update']);  // Mengupdate peminjaman
     Route::delete('/{id}', [ArsipController::class, 'destroy']);  // Menghapus peminjaman
-
 });
+
 
 
 

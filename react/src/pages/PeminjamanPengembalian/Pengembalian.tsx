@@ -1,5 +1,5 @@
 import React from 'react';
-import PeminjamanForm from '../../components/Peminjaman/PeminjamanForm';
+import Selesaiform from '../../components/Peminjaman/SelesaiPeminjaman';
 import Pengembalian from '../../components/Peminjaman/Pengembalian';
 
 const Peminjaman: React.FC = () => {
@@ -8,6 +8,9 @@ const Peminjaman: React.FC = () => {
       <div>
         <h1>Manajemen Pengembalian</h1>
         <Pengembalian />
+      </div>
+      <div>
+        <Selesaiform />
       </div>
     </div>
   );

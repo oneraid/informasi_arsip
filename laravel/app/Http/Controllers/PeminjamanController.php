@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Peminjaman;
 use App\Models\Arsip;
 use Illuminate\Http\Request;
+use PhpOffice\PhpWord\TemplateProcessor;
+use Carbon\Carbon;
 
 class PeminjamanController extends Controller
 {
@@ -94,4 +96,63 @@ class PeminjamanController extends Controller
 
         return response()->json(['message' => 'Peminjaman deleted successfully.']);
     }
+
+    public function storeAndExport(Request $request)
+{
+    // Validasi dan buat data peminjaman seperti pada metode store sebelumnya
+    $validatedData = $request->validate([
+        'nama' => 'required|string|max:255',
+        'no_telp' => 'required|string|max:15',
+        'email' => 'required|email|max:255',
+        'tanggal_pinjam' => 'required|date',
+        'tanggal_kembali' => 'nullable|date',
+        'status' => 'required|string|max:50',
+        'arsip_ids' => 'required|array',
+        'arsip_ids.*' => 'exists:arsip,id',
+    ]);
+
+    $peminjaman = Peminjaman::create($validatedData);
+    $peminjaman->arsip()->attach($validatedData['arsip_ids']);
+
+    // Setelah data tersimpan, ekspor ke DOCX
+    return $this->exportToWord($peminjaman->id);
+}
+
+public function exportToWord($id)
+{
+    $templatePath = app_path('templates/peminjaman_template.docx');
+    $templateProcessor = new TemplateProcessor($templatePath);
+    $peminjaman = Peminjaman::with('arsip')->findOrFail($id);
+
+    // Convert dates to Carbon instances if not already
+    $tanggalPinjam = Carbon::parse($peminjaman->tanggal_pinjam);
+    $tanggalKembali = $peminjaman->tanggal_kembali ? Carbon::parse($peminjaman->tanggal_kembali) : null;
+
+    // Set values in the template
+    $templateProcessor->setValue('nama', $peminjaman->nama);
+    $templateProcessor->setValue('email', $peminjaman->email);
+    $templateProcessor->setValue('no_telp', $peminjaman->no_telp);
+    $templateProcessor->setValue('tanggal_pinjam', $tanggalPinjam->format('d-m-Y'));
+    $templateProcessor->setValue('tanggal_kembali', $tanggalKembali ? $tanggalKembali->format('d-m-Y') : '-');
+    $templateProcessor->setValue('status', $peminjaman->status);
+
+    // Process arsip data
+    $arsipData = '';
+    foreach ($peminjaman->arsip as $arsip) {
+        $arsipData .= "No Rak: {$arsip->no_rak}, No Box: {$arsip->no_box}, Jenis Arsip: {$arsip->jenis_arsip}, Bulan: {$arsip->bulan}, Tahun: {$arsip->tahun}, No Arsip: {$arsip->no_arsip}; ";
+    }
+    $templateProcessor->setValue('arsip', rtrim($arsipData, '; '));
+
+    // Generate and send the file
+    $fileName = 'peminjaman_' . $peminjaman->nama . '.docx';
+    $tempFile = tempnam(sys_get_temp_dir(), $fileName);
+    $templateProcessor->saveAs($tempFile);
+
+    return response()->download($tempFile, $fileName)->deleteFileAfterSend(true);
+}
+
+
+
+
+
 }

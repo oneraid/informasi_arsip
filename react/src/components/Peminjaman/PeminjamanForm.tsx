@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
 import PeminjamanModal from '../Peminjaman/ArsipModal'; // Adjust the path according to your project structure
-import { createPeminjaman } from '../../services/arsipApi';
+import {
+  createPeminjaman,
+  storeAndExportPeminjaman,
+} from '../../services/arsipApi';
 
 interface PeminjamanFormProps {
   onSubmitSuccess: () => void;
@@ -24,16 +27,25 @@ const PeminjamanForm: React.FC<PeminjamanFormProps> = ({ onSubmitSuccess }) => {
         no_telp: noTelp,
         tanggal_pinjam: tanggalPinjam,
         tanggal_kembali: tanggalKembali,
-        status: 'Pending', // Set status to "Pending"
+        status: 'Pending',
         arsip_ids: selectedItems.map((item) => item.id),
       };
 
-      await createPeminjaman(peminjamanData);
-      alert('Peminjaman berhasil dibuat.');
+      // Make the API call to store the data and export to DOCX
+      const response = await storeAndExportPeminjaman(peminjamanData);
+
+      // Trigger the file download
+      const url = window.URL.createObjectURL(new Blob([response]));
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', `peminjaman_${nama}.docx`);
+      document.body.appendChild(link);
+      link.click();
+
+      alert('Peminjaman berhasil dibuat dan file diunduh.');
       onSubmitSuccess();
     } catch (error) {
       console.error('Error submitting peminjaman:', error);
-      alert('Gagal membuat peminjaman.');
     }
   };
 

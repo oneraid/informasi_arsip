@@ -63,3 +63,10 @@ export const deletePeminjaman = async (id: number) => {
   const response = await axios.delete(`${API_URL_PEMINJAMAN}/${id}`);
   return response.data;
 };
+
+export const storeAndExportPeminjaman = async (data: Partial<Peminjaman>) => {
+  const response = await axios.post(`${API_URL_PEMINJAMAN}/export`, data, {
+    responseType: 'blob', // Important to handle file download
+  });
+  return response.data;
+};
