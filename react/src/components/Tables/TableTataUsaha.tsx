@@ -7,6 +7,13 @@ const TableTataUsaha: React.FC = () => {
   const [data, setData] = useState<Arsip[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const [filters, setFilters] = useState({
+    no_rak: '',
+    no_box: '',
+    no_arsip: '',
+    bulan: '',
+    tahun: '',
+  });
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -17,7 +24,38 @@ const TableTataUsaha: React.FC = () => {
         const TataUsahaData = response.data.filter(
           (item: Arsip) => item.bidang === 'Tata Usaha',
         );
-        setData(TataUsahaData);
+
+        // Apply filters
+        let filteredData = TataUsahaData;
+        if (filters.no_rak) {
+          filteredData = filteredData.filter((item) =>
+            item.no_rak.toLowerCase().includes(filters.no_rak.toLowerCase()),
+          );
+        }
+        if (filters.no_box) {
+          filteredData = filteredData.filter((item) =>
+            item.no_box.toLowerCase().includes(filters.no_box.toLowerCase()),
+          );
+        }
+        if (filters.no_arsip) {
+          filteredData = filteredData.filter((item) =>
+            item.no_arsip
+              .toLowerCase()
+              .includes(filters.no_arsip.toLowerCase()),
+          );
+        }
+        if (filters.bulan) {
+          filteredData = filteredData.filter((item) =>
+            item.bulan.toLowerCase().includes(filters.bulan.toLowerCase()),
+          );
+        }
+        if (filters.tahun) {
+          filteredData = filteredData.filter((item) =>
+            item.tahun.toLowerCase().includes(filters.tahun.toLowerCase()),
+          );
+        }
+
+        setData(filteredData);
       } catch (err) {
         setError('Failed to fetch data.');
       } finally {
@@ -26,7 +64,7 @@ const TableTataUsaha: React.FC = () => {
     };
 
     fetchData();
-  }, []);
+  }, [filters]); // Run effect when filters change
 
   const handleDelete = async (id: number | undefined) => {
     if (id !== undefined) {
@@ -49,11 +87,61 @@ const TableTataUsaha: React.FC = () => {
     }
   };
 
+  const handleFilterChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setFilters((prevFilters) => ({
+      ...prevFilters,
+      [name]: value,
+    }));
+  };
+
   if (loading) return <p>Loading...</p>;
   if (error) return <p className="text-red-500">{error}</p>;
 
   return (
     <div className="rounded-sm border border-stroke bg-white px-5 pt-6 pb-2.5 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-1">
+      <div className="mb-4">
+        <input
+          type="text"
+          name="no_rak"
+          value={filters.no_rak}
+          onChange={handleFilterChange}
+          placeholder="Filter No Rak"
+          className="mr-2 border p-2 rounded"
+        />
+        <input
+          type="text"
+          name="no_box"
+          value={filters.no_box}
+          onChange={handleFilterChange}
+          placeholder="Filter No Box"
+          className="mr-2 border p-2 rounded"
+        />
+        <input
+          type="text"
+          name="no_arsip"
+          value={filters.no_arsip}
+          onChange={handleFilterChange}
+          placeholder="Filter No Arsip"
+          className="mr-2 border p-2 rounded"
+        />
+        <input
+          type="text"
+          name="bulan"
+          value={filters.bulan}
+          onChange={handleFilterChange}
+          placeholder="Filter Bulan"
+          className="mr-2 border p-2 rounded"
+        />
+        <input
+          type="text"
+          name="tahun"
+          value={filters.tahun}
+          onChange={handleFilterChange}
+          placeholder="Filter Tahun"
+          className="border p-2 rounded"
+        />
+      </div>
       <div className="max-w-full overflow-x-auto">
         <table className="w-full table-auto">
           <thead>
