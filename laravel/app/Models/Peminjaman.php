@@ -16,6 +16,7 @@ class Peminjaman extends Model
         'nama',
         'no_telp',
         'email',
+        'keperluan',
         'tanggal_pinjam',
         'tanggal_kembali',
         'status',  // Kolom status ditambahkan di sini

@@ -31,8 +31,8 @@ const DropdownUser: React.FC = () => {
       await logout(); // Ensure you have a `logout` function to handle the logout process
       localStorage.removeItem('userToken');
       localStorage.removeItem('userName');
-      window.location.reload();
       navigate('/');
+      window.location.reload();
     } catch (error) {
       console.error('Logout failed', error);
     }

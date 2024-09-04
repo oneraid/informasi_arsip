@@ -6,9 +6,11 @@ import { login } from '../../services/authApi';
 import { Link } from 'react-router-dom';
 import LogoDark from '../../images/logo/logo-dark.svg';
 import Logo from '../../images/logo/logo.svg';
+import { useAuth } from '../../contexts/AuthContext';
 
 const SignIn: React.FC = () => {
   const navigate = useNavigate();
+  const { login: authenticate, setIsAuthenticated } = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -20,6 +22,7 @@ const SignIn: React.FC = () => {
     try {
       const response = await login({ email, password });
       console.log('User data:', response);
+      setIsAuthenticated(true); // Set autentikasi menjadi true
 
       // Save token to localStorage
       localStorage.setItem('userToken', response.token);

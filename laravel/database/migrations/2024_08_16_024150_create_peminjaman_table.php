@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('nama');
             $table->string('no_telp', 15);
             $table->string('email');
+            $table->string('keperluan');
             $table->date('tanggal_pinjam');
             $table->date('tanggal_kembali')->nullable();
             $table->string('status');

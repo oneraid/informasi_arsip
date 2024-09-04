@@ -5,6 +5,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PeminjamanController;
 use App\Http\Controllers\ArsipController;
+use App\Http\Controllers\Auth\ResetEmailandPassword;
 
 
 Route::prefix('peminjaman')->group(function () {
@@ -31,11 +32,11 @@ use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 
 
-Route::post('/register', [RegisteredUserController::class, 'store']);
-Route::post('/login', [AuthenticatedSessionController::class, 'store']);
+Route::post('/register', [RegisteredUserController::class, 'register']);
+Route::post('/login', [AuthenticatedSessionController::class, 'login']);
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthenticatedSessionController::class, 'logout']);
-
-
+    Route::post('update-password', [ResetEmailandPassword::class, 'updatePassword']);
+    Route::post('update-email', [ResetEmailandPassword::class, 'updateEmail']);
 });

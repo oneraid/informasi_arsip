@@ -13,6 +13,7 @@ const PeminjamanForm: React.FC<PeminjamanFormProps> = ({ onSubmitSuccess }) => {
   const [nama, setNama] = useState<string>('');
   const [email, setEmail] = useState<string>('');
   const [noTelp, setNoTelp] = useState<string>(''); // Input for no_telp
+  const [keperluan, setKeperluan] = useState<string>(''); // Input for keperluan
   const [tanggalPinjam, setTanggalPinjam] = useState<string>(''); // Input for tanggal_pinjam
   const [tanggalKembali, setTanggalKembali] = useState<string>(''); // Input for tanggal_kembali
   const [selectedItems, setSelectedItems] = useState<any[]>([]);
@@ -25,6 +26,7 @@ const PeminjamanForm: React.FC<PeminjamanFormProps> = ({ onSubmitSuccess }) => {
         nama,
         email,
         no_telp: noTelp,
+        keperluan,
         tanggal_pinjam: tanggalPinjam,
         tanggal_kembali: tanggalKembali,
         status: 'Pending',
@@ -34,15 +36,21 @@ const PeminjamanForm: React.FC<PeminjamanFormProps> = ({ onSubmitSuccess }) => {
       // Make the API call to store the data and export to DOCX
       const response = await storeAndExportPeminjaman(peminjamanData);
 
-      // Trigger the file download
-      const url = window.URL.createObjectURL(new Blob([response]));
-      const link = document.createElement('a');
-      link.href = url;
-      link.setAttribute('download', `peminjaman_${nama}.docx`);
-      document.body.appendChild(link);
-      link.click();
+      // Check if response is a Blob and handle it
+      if (response instanceof Blob) {
+        const url = window.URL.createObjectURL(response);
+        const link = document.createElement('a');
+        link.href = url;
+        link.setAttribute('download', `peminjaman_${nama}.docx`);
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+        window.URL.revokeObjectURL(url);
+        alert('Peminjaman berhasil dibuat dan file diunduh.');
+      } else {
+        console.error('Unexpected response format:', response);
+      }
 
-      alert('Peminjaman berhasil dibuat dan file diunduh.');
       onSubmitSuccess();
     } catch (error) {
       console.error('Error submitting peminjaman:', error);
@@ -92,6 +100,19 @@ const PeminjamanForm: React.FC<PeminjamanFormProps> = ({ onSubmitSuccess }) => {
             id="no_telp"
             value={noTelp}
             onChange={(e) => setNoTelp(e.target.value)}
+            className="border border-gray-300 rounded-md p-2 w-full"
+            required
+          />
+        </div>
+        <div className="mb-4">
+          <label htmlFor="keperluan" className="block text-sm font-medium mb-2">
+            Keperluan
+          </label>
+          <input
+            type="text"
+            id="keperluan"
+            value={keperluan}
+            onChange={(e) => setKeperluan(e.target.value)}
             className="border border-gray-300 rounded-md p-2 w-full"
             required
           />

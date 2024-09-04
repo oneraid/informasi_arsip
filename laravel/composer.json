@@ -9,10 +9,12 @@
     "license": "MIT",
     "require": {
         "php": "^8.2",
+        "dompdf/dompdf": "^3.0",
         "laravel/framework": "^11.9",
         "laravel/sanctum": "^4.0",
         "laravel/tinker": "^2.9",
         "maatwebsite/excel": "^3.1",
+        "mpdf/mpdf": "^8.2",
         "phpoffice/phpword": "^1.2"
     },
     "require-dev": {

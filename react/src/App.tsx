@@ -1,6 +1,5 @@
-import { useEffect, useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Route, Routes, useLocation } from 'react-router-dom';
-
 import Loader from './common/Loader';
 import PageTitle from './components/PageTitle';
 import SignIn from './pages/Authentication/SignIn';
@@ -8,8 +7,6 @@ import SignUp from './pages/Authentication/SignUp';
 import Chart from './pages/Chart';
 import Dashboard from './pages/Dashboard/Dashboard';
 import Settings from './pages/Settings';
-import Alerts from './pages/UiElements/Alerts';
-import Buttons from './pages/UiElements/Buttons';
 import DefaultLayout from './layout/DefaultLayout';
 import Keuangan from './pages/DataArsip/Keuangan';
 import TataUsaha from './pages/DataArsip/TataUsaha';
@@ -18,6 +15,7 @@ import UpdateArsip from './pages/UpdateData/UpdateArsip';
 import Peminjaman from './pages/PeminjamanPengembalian/Peminjaman';
 import Aprroval from './pages/PeminjamanPengembalian/Aprroval';
 import Pengembalian from './pages/PeminjamanPengembalian/Pengembalian';
+import PrivateRoute from './components/PrivateRoute';
 
 function App() {
   const [loading, setLoading] = useState<boolean>(true);
@@ -36,21 +34,15 @@ function App() {
   ) : (
     <DefaultLayout>
       <Routes>
+        <Route path="/auth/signin" element={<SignIn />} />
+        <Route path="/auth/signup" element={<SignUp />} />
+        {/* Routes that do not require authentication */}
         <Route
           index
           element={
             <>
               <PageTitle title="Dashboard | Bakorwil I Kota Madiun" />
               <Dashboard />
-            </>
-          }
-        />
-        <Route
-          path="/tambah-data"
-          element={
-            <>
-              <PageTitle title="Tambah data | Bakorwil I Kota Madiun" />
-              <TambahData />
             </>
           }
         />
@@ -76,7 +68,7 @@ function App() {
           path="/data/tata-usaha"
           element={
             <>
-              <PageTitle title="Keuangan | Bakorwil I Kota Madiun" />
+              <PageTitle title="Tata Usaha | Bakorwil I Kota Madiun" />
               <TataUsaha />
             </>
           }
@@ -94,7 +86,7 @@ function App() {
           path="/pengembalian-arsip"
           element={
             <>
-              <PageTitle title="Peminjaman | Bakorwil I Kota Madiun" />
+              <PageTitle title="Pengembalian | Bakorwil I Kota Madiun" />
               <Pengembalian />
             </>
           }
@@ -103,7 +95,7 @@ function App() {
           path="/approval-arsip"
           element={
             <>
-              <PageTitle title="Peminjaman | Bakorwil I Kota Madiun" />
+              <PageTitle title="Approval | Bakorwil I Kota Madiun" />
               <Aprroval />
             </>
           }
@@ -126,42 +118,19 @@ function App() {
             </>
           }
         />
-        <Route
-          path="/ui/alerts"
-          element={
-            <>
-              <PageTitle title="Alerts | TailAdmin - Tailwind CSS Admin Dashboard Template" />
-              <Alerts />
-            </>
-          }
-        />
-        <Route
-          path="/ui/buttons"
-          element={
-            <>
-              <PageTitle title="Buttons | TailAdmin - Tailwind CSS Admin Dashboard Template" />
-              <Buttons />
-            </>
-          }
-        />
-        <Route
-          path="/auth/signin"
-          element={
-            <>
-              <PageTitle title="Signin | TailAdmin - Tailwind CSS Admin Dashboard Template" />
-              <SignIn />
-            </>
-          }
-        />
-        <Route
-          path="/auth/signup"
-          element={
-            <>
-              <PageTitle title="Signup | TailAdmin - Tailwind CSS Admin Dashboard Template" />
-              <SignUp />
-            </>
-          }
-        />
+
+        {/* Protected Route for /tambah-data */}
+        <Route element={<PrivateRoute />}>
+          <Route
+            path="/tambah-data"
+            element={
+              <>
+                <PageTitle title="Tambah data | Bakorwil I Kota Madiun" />
+                <TambahData />
+              </>
+            }
+          />
+        </Route>
       </Routes>
     </DefaultLayout>
   );

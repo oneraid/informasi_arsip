@@ -20,6 +20,7 @@ export interface Peminjaman {
   nama: string;
   no_telp: string;
   email: string;
+  keperluan: string;
   tanggal_pinjam: string;
   tanggal_kembali: string;
   status: string;
