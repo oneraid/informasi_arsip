@@ -73,8 +73,8 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
       await logout(); // Ensure you have a `logout` function to handle the logout process
       localStorage.removeItem('userToken');
       localStorage.removeItem('userName');
-      navigate('/');
       window.location.reload();
+      navigate('/');
     } catch (error) {
       console.error('Logout failed', error);
     }
@@ -324,33 +324,36 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
               {/* <!-- Menu END Item Logout --> */}
 
               {/* <!-- Menu Item SignIn --> */}
-              <li>
-                <NavLink
-                  to="/auth/signin"
-                  className={`group relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 ${
-                    window.location.pathname.includes('Logout') &&
-                    'bg-graydark dark:bg-meta-4'
-                  }`}
-                >
-                  <svg
-                    className="h-6 w-5 text-gray-500"
-                    width="24"
-                    height="24"
-                    viewBox="0 0 24 24"
-                    stroke-width="2"
-                    stroke="currentColor"
-                    fill="none"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
+              {!isAuthenticated && (
+                <li>
+                  <NavLink
+                    to="/auth/signin"
+                    className={`group relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 ${
+                      window.location.pathname.includes('Logout') &&
+                      'bg-graydark dark:bg-meta-4'
+                    }`}
                   >
-                    {' '}
-                    <path stroke="none" d="M0 0h24v24H0z" />{' '}
-                    <path d="M14 8v-2a2 2 0 0 0 -2 -2h-7a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h7a2 2 0 0 0 2 -2v-2" />{' '}
-                    <path d="M7 12h14l-3 -3m0 6l3 -3" />
-                  </svg>
-                  Login
-                </NavLink>
-              </li>
+                    <svg
+                      className="h-6 w-5 text-gray-500"
+                      width="24"
+                      height="24"
+                      viewBox="0 0 24 24"
+                      stroke-width="2"
+                      stroke="currentColor"
+                      fill="none"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      {' '}
+                      <path stroke="none" d="M0 0h24v24H0z" />{' '}
+                      <path d="M14 8v-2a2 2 0 0 0 -2 -2h-7a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h7a2 2 0 0 0 2 -2v-2" />{' '}
+                      <path d="M7 12h14l-3 -3m0 6l3 -3" />
+                    </svg>
+                    Login
+                  </NavLink>
+                </li>
+              )}
+              {/* <!-- Menu Item SignIn --> */}
               {/* <!-- Menu Item END SignIn --> */}
             </ul>
           </div>

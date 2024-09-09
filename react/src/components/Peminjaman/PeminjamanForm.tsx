@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import PeminjamanModal from '../Modal/ArsipModal'; // Adjust the path according to your project structure
+import PeminjamanModal from '../Modal/ArsipModal';
+import SuccessModal from '../Modal/SuccessModal'; // Import the SuccessModal
 import {
   createPeminjaman,
   storeAndExportPeminjaman,
@@ -12,12 +13,13 @@ interface PeminjamanFormProps {
 const PeminjamanForm: React.FC<PeminjamanFormProps> = ({ onSubmitSuccess }) => {
   const [nama, setNama] = useState<string>('');
   const [email, setEmail] = useState<string>('');
-  const [noTelp, setNoTelp] = useState<string>(''); // Input for no_telp
-  const [keperluan, setKeperluan] = useState<string>(''); // Input for keperluan
-  const [tanggalPinjam, setTanggalPinjam] = useState<string>(''); // Input for tanggal_pinjam
-  const [tanggalKembali, setTanggalKembali] = useState<string>(''); // Input for tanggal_kembali
+  const [noTelp, setNoTelp] = useState<string>('');
+  const [keperluan, setKeperluan] = useState<string>('');
+  const [tanggalPinjam, setTanggalPinjam] = useState<string>('');
+  const [tanggalKembali, setTanggalKembali] = useState<string>('');
   const [selectedItems, setSelectedItems] = useState<any[]>([]);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const [isSuccessModalOpen, setIsSuccessModalOpen] = useState<boolean>(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -33,10 +35,8 @@ const PeminjamanForm: React.FC<PeminjamanFormProps> = ({ onSubmitSuccess }) => {
         arsip_ids: selectedItems.map((item) => item.id),
       };
 
-      // Make the API call to store the data and export to DOCX
       const response = await storeAndExportPeminjaman(peminjamanData);
 
-      // Check if response is a Blob and handle it
       if (response instanceof Blob) {
         const url = window.URL.createObjectURL(response);
         const link = document.createElement('a');
@@ -46,13 +46,14 @@ const PeminjamanForm: React.FC<PeminjamanFormProps> = ({ onSubmitSuccess }) => {
         link.click();
         link.remove();
         window.URL.revokeObjectURL(url);
-        alert('Peminjaman berhasil dibuat dan file diunduh.');
       } else {
         console.error('Unexpected response format:', response);
       }
 
       onSubmitSuccess();
     } catch (error) {
+      setIsSuccessModalOpen(true);
+      // Show success modal
       console.error('Error submitting peminjaman:', error);
     }
   };
@@ -249,6 +250,12 @@ const PeminjamanForm: React.FC<PeminjamanFormProps> = ({ onSubmitSuccess }) => {
         isOpen={isModalOpen}
         onRequestClose={() => setIsModalOpen(false)}
         onSelectItems={handleSelectItems}
+      />
+
+      <SuccessModal
+        isOpen={isSuccessModalOpen}
+        onClose={() => setIsSuccessModalOpen(false)}
+        message="Peminjaman berhasil diproess dan file telah diunduh."
       />
     </div>
   );
