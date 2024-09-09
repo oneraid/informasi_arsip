@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import PeminjamanModal from '../Peminjaman/ArsipModal'; // Adjust the path according to your project structure
+import PeminjamanModal from '../Modal/ArsipModal'; // Adjust the path according to your project structure
 import {
   createPeminjaman,
   storeAndExportPeminjaman,
@@ -61,10 +61,17 @@ const PeminjamanForm: React.FC<PeminjamanFormProps> = ({ onSubmitSuccess }) => {
     setSelectedItems(items);
   };
 
+  const handleDeleteItem = (indexToDelete: number) => {
+    setSelectedItems((prevItems) =>
+      prevItems.filter((_, index) => index !== indexToDelete),
+    );
+  };
+
   return (
     <div>
       <h2 className="text-xl font-bold mb-4">Formulir Peminjaman</h2>
       <form onSubmit={handleSubmit}>
+        {/* Form Inputs */}
         <div className="mb-4">
           <label htmlFor="nama" className="block text-sm font-medium mb-2">
             Nama
@@ -212,7 +219,13 @@ const PeminjamanForm: React.FC<PeminjamanFormProps> = ({ onSubmitSuccess }) => {
                         {item.no_arsip}
                       </td>
                       <td className="px-4 py-2 border-b text-sm text-gray-700">
-                        {item.deskripsi}
+                        <button
+                          type="button"
+                          className="text-red-500"
+                          onClick={() => handleDeleteItem(index)}
+                        >
+                          &times;
+                        </button>
                       </td>
                     </tr>
                   ))}

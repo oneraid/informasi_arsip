@@ -32,7 +32,8 @@ const SignUp: React.FC = () => {
       const response = await signup(formData);
       console.log('User registered:', response);
       setLoading(false);
-      navigate('auth/signin');
+      navigate('/');
+      window.location.reload();
     } catch (err: any) {
       setLoading(false);
       if (err.response && err.response.data) {

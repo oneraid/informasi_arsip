@@ -3,19 +3,24 @@ import {
   getPeminjaman,
   updatePeminjaman,
   getPeminjamanById,
+  updateArsip,
 } from '../../services/arsipApi';
 import { Peminjaman } from '../../types/arsip';
+import ConfirmationModal from '../Modal/ConfirmationModal'; // Import modal
 
 const Pengembalian: React.FC = () => {
   const [peminjaman, setPengembalian] = useState<Peminjaman[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const [showModal, setShowModal] = useState<boolean>(false);
+  const [selectedPeminjamanId, setSelectedPeminjamanId] = useState<
+    number | null
+  >(null);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const data = await getPeminjaman();
-        // Filter out only the 'Dipinjam' status items
         const borrowedPengembalian = data.filter(
           (p) => p.status === 'Dipinjam',
         );
@@ -33,28 +38,29 @@ const Pengembalian: React.FC = () => {
 
   const handleReturned = async (id: number) => {
     try {
-      // Fetch the current Peminjaman object to get all required fields
       const peminjaman = await getPeminjamanById(id);
-
-      // Filter out any undefined values from arsip_ids
       const arsip_ids = peminjaman.arsip
         .map((arsip) => arsip.id)
         .filter((id): id is number => id !== undefined);
 
-      // Create the update data object with the required fields
       const updateData = {
         nama: peminjaman.nama,
         no_telp: peminjaman.no_telp,
         email: peminjaman.email,
+        keperluan: peminjaman.keperluan,
         tanggal_pinjam: peminjaman.tanggal_pinjam,
         tanggal_kembali: peminjaman.tanggal_kembali,
         status: 'Selesai',
-        arsip_ids, // Include filtered arsip_ids
+        arsip_ids,
       };
 
       await updatePeminjaman(id, updateData);
 
-      alert('Peminjaman has been marked as returned.');
+      for (const arsipId of arsip_ids) {
+        await updateArsip(arsipId, { status: 'Tersedia' });
+      }
+
+      alert('Peminjaman telah berhasil dikembalikan.');
       setPengembalian((prev) => prev.filter((p) => p.id !== id));
     } catch (error: any) {
       if (error.response) {
@@ -63,15 +69,31 @@ const Pengembalian: React.FC = () => {
           error.response.data,
         );
         alert(
-          `Failed to mark Peminjaman as returned: ${JSON.stringify(
+          `Gagal mengembalikan peminjaman: ${JSON.stringify(
             error.response.data,
           )}`,
         );
       } else {
         console.error('Error marking Peminjaman as returned:', error.message);
-        alert('Failed to mark Peminjaman as returned.');
+        alert('Gagal mengembalikan peminjaman.');
       }
     }
+  };
+
+  const handleShowModal = (id: number) => {
+    setSelectedPeminjamanId(id);
+    setShowModal(true);
+  };
+
+  const handleConfirm = () => {
+    if (selectedPeminjamanId !== null) {
+      handleReturned(selectedPeminjamanId);
+    }
+    setShowModal(false);
+  };
+
+  const handleCancel = () => {
+    setShowModal(false);
   };
 
   if (loading) return <p>Loading...</p>;
@@ -79,9 +101,11 @@ const Pengembalian: React.FC = () => {
 
   return (
     <div className="container mx-auto p-4">
-      <h1 className="text-2xl font-bold mb-4">Borrowed Peminjaman List</h1>
+      <h1 className="text-2xl font-bold mb-4">
+        Daftar Peminjaman yang Dipinjam
+      </h1>
       {peminjaman.length === 0 ? (
-        <p>No borrowed Peminjaman requests.</p>
+        <p>Tidak ada peminjaman yang sedang dipinjam.</p>
       ) : (
         <table className="table-auto w-full">
           <thead>
@@ -91,8 +115,8 @@ const Pengembalian: React.FC = () => {
               <th className="px-4 py-2">Email</th>
               <th className="px-4 py-2">Tanggal Pinjam</th>
               <th className="px-4 py-2">Tanggal Kembali</th>
-              <th className="px-4 py-2">Items Borrowed</th>
-              <th className="px-4 py-2">Actions</th>
+              <th className="px-4 py-2">Arsip Dipinjam</th>
+              <th className="px-4 py-2">Aksi</th>
             </tr>
           </thead>
           <tbody>
@@ -115,8 +139,8 @@ const Pengembalian: React.FC = () => {
                 </td>
                 <td className="border px-4 py-2">
                   <button
-                    className="bg-blue-500 text-white px-2 py-1 rounded"
-                    onClick={() => handleReturned(p.id)}
+                    className="block text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
+                    onClick={() => handleShowModal(p.id)}
                   >
                     Mark as Returned
                   </button>
@@ -125,6 +149,13 @@ const Pengembalian: React.FC = () => {
             ))}
           </tbody>
         </table>
+      )}
+      {showModal && (
+        <ConfirmationModal
+          message="Apakah Anda yakin ingin mengembalikan peminjaman ini?"
+          onConfirm={handleConfirm}
+          onCancel={handleCancel}
+        />
       )}
     </div>
   );

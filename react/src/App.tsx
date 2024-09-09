@@ -13,8 +13,7 @@ import TataUsaha from './pages/DataArsip/TataUsaha';
 import TambahData from './pages/TambahData/TambahData';
 import UpdateArsip from './pages/UpdateData/UpdateArsip';
 import Peminjaman from './pages/PeminjamanPengembalian/Peminjaman';
-import Aprroval from './pages/PeminjamanPengembalian/Aprroval';
-import Pengembalian from './pages/PeminjamanPengembalian/Pengembalian';
+import Aprroval from './pages/PeminjamanPengembalian/StatusPeminjaman';
 import PrivateRoute from './components/PrivateRoute';
 
 function App() {
@@ -79,15 +78,6 @@ function App() {
             <>
               <PageTitle title="Peminjaman | Bakorwil I Kota Madiun" />
               <Peminjaman />
-            </>
-          }
-        />
-        <Route
-          path="/pengembalian-arsip"
-          element={
-            <>
-              <PageTitle title="Pengembalian | Bakorwil I Kota Madiun" />
-              <Pengembalian />
             </>
           }
         />

@@ -14,7 +14,7 @@ Route::prefix('peminjaman')->group(function () {
     Route::get('/{id}', [PeminjamanController::class, 'show']);
     Route::put('/{id}', [PeminjamanController::class, 'update']);
     Route::delete('/{id}', [PeminjamanController::class, 'destroy']);
-    Route::get('/{id}/export', [PeminjamanController::class, 'exportToWord']);
+    Route::get('/{id}/export-pdf', [PeminjamanController::class, 'exportToPdf']);
     Route::post('/export', [PeminjamanController::class, 'storeAndExport']);
 
 });

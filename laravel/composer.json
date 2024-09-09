@@ -9,13 +9,16 @@
     "license": "MIT",
     "require": {
         "php": "^8.2",
+        "barryvdh/laravel-dompdf": "^3.0",
         "dompdf/dompdf": "^3.0",
+        "ilovepdf/ilovepdf-php": "^1.2",
         "laravel/framework": "^11.9",
         "laravel/sanctum": "^4.0",
         "laravel/tinker": "^2.9",
         "maatwebsite/excel": "^3.1",
         "mpdf/mpdf": "^8.2",
-        "phpoffice/phpword": "^1.2"
+        "phpoffice/phpword": "^1.2",
+        "tecnickcom/tcpdf": "^6.7"
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",

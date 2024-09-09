@@ -75,3 +75,15 @@ export const storeAndExportPeminjaman = async (data: any) => {
     throw error;
   }
 };
+
+export const exportPeminjamanToPdf = async (id: number): Promise<Blob> => {
+  try {
+    const response = await axios.get(`${API_URL_PEMINJAMAN}/${id}/export-pdf`, {
+      responseType: 'blob', // Important: This ensures Axios returns a Blob
+    });
+    return response.data; // response.data is of type Blob
+  } catch (error) {
+    console.error('Error fetching PDF:', error);
+    throw error;
+  }
+};
