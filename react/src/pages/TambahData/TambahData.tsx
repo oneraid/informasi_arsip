@@ -4,6 +4,7 @@ import { Arsip } from '../../types/arsip';
 import SelectBidang from '../../components/Forms/SelectGroup/SelectBidang';
 import SelectMonth from '../../components/Forms/SelectGroup/SelectMonth';
 import MultiSelectColors from '../../components/Forms/SelectGroup/MultiSelectColors';
+import SuccessModal from '../../components/Modal/SuccessModal'; //
 
 const CreateArsip: React.FC = () => {
   const [formData, setFormData] = useState<Arsip>({
@@ -20,6 +21,7 @@ const CreateArsip: React.FC = () => {
   });
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false); // Modal state
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
@@ -47,6 +49,7 @@ const CreateArsip: React.FC = () => {
     try {
       await createArsip(formData);
       setSuccess('Arsip created successfully!');
+      setIsModalOpen(true);
       setFormData({
         no_rak: '',
         no_box: '',
@@ -64,6 +67,10 @@ const CreateArsip: React.FC = () => {
       setError('Failed to create Arsip.');
       setSuccess(null);
     }
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
   };
 
   return (
@@ -206,6 +213,12 @@ const CreateArsip: React.FC = () => {
           {success && <p className="text-green-500">{success}</p>}
         </form>
       </div>
+      {/* Success Modal */}
+      <SuccessModal
+        isOpen={isModalOpen}
+        onClose={closeModal}
+        message={success || ''}
+      />
     </div>
   );
 };

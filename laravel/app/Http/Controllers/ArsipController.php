@@ -6,6 +6,7 @@ use App\Models\Arsip;
 use Illuminate\Http\Request;
 use App\Imports\ArsipImport;
 use Maatwebsite\Excel\Facades\Excel;
+use Illuminate\Support\Facades\DB;
 
 class ArsipController extends Controller
 {
@@ -25,7 +26,7 @@ class ArsipController extends Controller
     {
         $validatedData = $request->validate([
             'no_rak' => 'required|string|max:255',
-            'no_box' => 'required|string|max:255',
+            'no_box' => 'nullable|string|max:255',
             'bidang' => 'required|string|max:255',
             'jenis_arsip' => 'required|string|max:255',
             'no_arsip' => 'required|string|max:255',
@@ -114,5 +115,15 @@ class ArsipController extends Controller
         Excel::import(new ArsipImport, $request->file('file'));
 
         return redirect()->back()->with('success', 'Data imported successfully.');
+    }
+
+    public function getArsipByBidang()
+    {
+        // Mengambil jumlah arsip berdasarkan bidang
+        $arsipData = Arsip::select('bidang', DB::raw('count(*) as total'))
+            ->groupBy('bidang')
+            ->get();
+
+        return response()->json($arsipData);
     }
 }

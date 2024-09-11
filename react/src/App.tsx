@@ -15,6 +15,7 @@ import UpdateArsip from './pages/UpdateData/UpdateArsip';
 import Peminjaman from './pages/PeminjamanPengembalian/Peminjaman';
 import Aprroval from './pages/PeminjamanPengembalian/StatusPeminjaman';
 import PrivateRoute from './components/PrivateRoute';
+import ImportArsip from './pages/TambahData/ImportArsip';
 
 function App() {
   const [loading, setLoading] = useState<boolean>(true);
@@ -117,6 +118,15 @@ function App() {
               <>
                 <PageTitle title="Tambah data | Bakorwil I Kota Madiun" />
                 <TambahData />
+              </>
+            }
+          />
+          <Route
+            path="/import-arsip"
+            element={
+              <>
+                <PageTitle title="Tambah data | Bakorwil I Kota Madiun" />
+                <ImportArsip />
               </>
             }
           />

@@ -19,6 +19,11 @@ const SelectMonth: React.FC<SelectBidangProps> = ({ value, onChange }) => {
         <option value="">Select Bidang</option>
         <option value="Keuangan">Keuangan</option>
         <option value="Tata Usaha">Tata Usaha</option>
+        <option value="Susunan Program">Susunan Program</option>
+        <option value="Pembangunan Ekonomi">Pembangunan Ekonomi</option>
+        <option value="Pemerintahan">Pemerintahan</option>
+        <option value="Sarana Prasarana">Sarana Prasarana</option>
+        <option value="Kemasyarakatan">Kemasyarakatan</option>
       </select>
     </div>
   );

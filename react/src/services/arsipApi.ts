@@ -31,7 +31,7 @@ export const deleteArsip = async (id: number): Promise<void> => {
   await axios.delete(`${API_URL_ARSIP}/${id}`);
 };
 
-//--------------------Peminjaman---------------------
+//--------------------Peminjaman------------------------------------------------------
 
 export const getPeminjaman = async () => {
   const response = await axios.get<Peminjaman[]>(API_URL_PEMINJAMAN);
@@ -85,5 +85,50 @@ export const exportPeminjamanToPdf = async (id: number): Promise<Blob> => {
   } catch (error) {
     console.error('Error fetching PDF:', error);
     throw error;
+  }
+};
+
+export const sendReminderEmail = (id: number) => {
+  return axios.post(`${API_URL_PEMINJAMAN}/${id}/send-reminder`);
+};
+
+// service/api.tsx
+export const getArsipByBidang = async () => {
+  try {
+    const response = await fetch(`${API_URL_ARSIP}/arsip-bidang`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error('Error fetching arsip by bidang:', error);
+    throw error;
+  }
+};
+
+export const uploadFile = async (file: File) => {
+  const formData = new FormData();
+  formData.append('file', file);
+
+  try {
+    const response = await axios.post(`${API_URL_ARSIP}/import`, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+    return response.data;
+  } catch (error: any) {
+    if (error.response && error.response.data && error.response.data.message) {
+      throw new Error(error.response.data.message);
+    }
+    throw new Error('Failed to upload file');
   }
 };

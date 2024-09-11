@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('arsip', function (Blueprint $table) {
             $table->id();
             $table->string('no_rak');
-            $table->string('no_box');
+            $table->string('no_box')->nullable();
             $table->string('bidang');
             $table->string('jenis_arsip');
             $table->string('no_arsip');

@@ -10,5 +10,5 @@ Route::get('/', function () {
 
 require __DIR__.'/auth.php';
 
-Route::get('/arsip/import', [ArsipController::class, 'showImportForm'])->name('arsip.import.form');
-Route::post('/arsip/import', [ArsipController::class, 'import'])->name('arsip.import');
+// Route::get('/arsip/import', [ArsipController::class, 'showImportForm'])->name('arsip.import.form');
+// Route::post('/arsip/import', [ArsipController::class, 'import'])->name('arsip.import');

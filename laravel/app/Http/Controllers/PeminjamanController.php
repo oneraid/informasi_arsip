@@ -3,13 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Models\Peminjaman;
-use App\Models\Arsip;
 use Illuminate\Http\Request;
 use PhpOffice\PhpWord\TemplateProcessor;
 use Carbon\Carbon;
 use Mpdf\Mpdf;
 use Dompdf\Dompdf;
 use Dompdf\Options;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\ReminderMail;
 
 
 class PeminjamanController extends Controller
@@ -204,6 +205,20 @@ class PeminjamanController extends Controller
         // Otherwise, return the DOCX as a download
         return response()->download($tempFile, $fileName)->deleteFileAfterSend(true);
     }
+
+    public function sendReminderEmail($id)
+{
+    try {
+        $peminjaman = Peminjaman::with('arsip')->findOrFail($id);
+
+        // Send email
+        Mail::to($peminjaman->email)->send(new ReminderMail($peminjaman));
+
+        return response()->json(['message' => 'Reminder email sent successfully!']);
+    } catch (\Exception $e) {
+        return response()->json(['message' => 'Failed to send email', 'error' => $e->getMessage()], 500);
+    }
+}
 
 
 }

@@ -4,6 +4,7 @@ import {
   updatePeminjaman,
   getPeminjamanById,
   updateArsip,
+  sendReminderEmail,
 } from '../../services/arsipApi';
 import { Peminjaman } from '../../types/arsip';
 import ConfirmationModal from '../Modal/ConfirmationModal'; // Import modal
@@ -96,6 +97,16 @@ const Pengembalian: React.FC = () => {
     setShowModal(false);
   };
 
+  const handleSendReminder = async (id: number) => {
+    try {
+      await sendReminderEmail(id);
+      alert('Email pengingat telah berhasil dikirim.');
+    } catch (error) {
+      console.error('Failed to send reminder:', error);
+      alert('Gagal mengirim email pengingat.');
+    }
+  };
+
   if (loading) return <p>Loading...</p>;
   if (error) return <p className="text-red-500">{error}</p>;
 
@@ -138,12 +149,20 @@ const Pengembalian: React.FC = () => {
                   </ul>
                 </td>
                 <td className="border px-4 py-2">
-                  <button
-                    className="block text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
-                    onClick={() => handleShowModal(p.id)}
-                  >
-                    Mark as Returned
-                  </button>
+                  <div className="flex flex-col space-y-2">
+                    <button
+                      className="block text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
+                      onClick={() => handleShowModal(p.id)}
+                    >
+                      Mark as Returned
+                    </button>
+                    <button
+                      className="block text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
+                      onClick={() => handleSendReminder(p.id)}
+                    >
+                      Send Reminder
+                    </button>
+                  </div>
                 </td>
               </tr>
             ))}
