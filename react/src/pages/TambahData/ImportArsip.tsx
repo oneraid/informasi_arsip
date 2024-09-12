@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { uploadFile } from '../../services/arsipApi'; // Adjust the import path as needed
+import { uploadFile } from '../../services/arsipApi';
 
 const FileUpload: React.FC = () => {
   const [file, setFile] = useState<File | null>(null);
@@ -27,7 +27,7 @@ const FileUpload: React.FC = () => {
   };
 
   const downloadTemplate = () => {
-    const templateUrl = '/path/to/your/template.xlsx'; // Update this path to your template file location
+    const templateUrl = 'templates/template_arsip.xlsx';
     const link = document.createElement('a');
     link.href = templateUrl;
     link.download = 'template.xlsx';

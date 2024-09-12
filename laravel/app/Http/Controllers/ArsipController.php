@@ -68,16 +68,16 @@ class ArsipController extends Controller
         }
 
         $validatedData = $request->validate([
-            'no_rak' => 'string|max:255',
-            'no_box' => 'string|max:255',
-            'bidang' => 'string|max:255',
-            'jenis_arsip' => 'string|max:255',
-            'no_arsip' => 'string|max:255',
-            'bulan' => 'string|max:255',
-            'tahun' => 'string|max:4',
-            'warna' => 'string|max:255',
-            'jumlah' => 'integer',
-            'status' => 'string|max:255',
+            'no_rak' => 'required|string|max:255',
+            'no_box' => 'nullable|string|max:255',
+            'bidang' => 'required|string|max:255',
+            'jenis_arsip' => 'required|string|max:255',
+            'no_arsip' => 'required|string|max:255',
+            'bulan' => 'required|string|max:255',
+            'tahun' => 'required|string|max:4',
+            'warna' => 'nullable|string|max:255',
+            'jumlah' => 'required|integer',
+            'status' => 'required|string|max:255',
         ]);
 
         $arsip->update($validatedData);

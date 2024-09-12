@@ -30,7 +30,12 @@ const UpdateArsip: React.FC = () => {
       try {
         if (id) {
           const response = await getArsipById(parseInt(id));
-          setFormData(response); // Directly assign the response to formData
+          // Ensure warna is an empty array if null/undefined
+          const updatedResponse = {
+            ...response,
+            warna: response.warna ? response.warna : '',
+          };
+          setFormData(updatedResponse); // Set the processed data
         }
       } catch (error) {
         setError('Error fetching arsip data');
@@ -59,11 +64,12 @@ const UpdateArsip: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    console.log('Submitting form data:', formData); // Add this line
     try {
       if (id) {
         await updateArsip(parseInt(id), formData);
         setSuccess('Arsip entry updated successfully!');
-        navigate(-1); // Kembali ke halaman sebelumnya
+        navigate(-1);
       }
     } catch (error) {
       setError('Error updating arsip');
