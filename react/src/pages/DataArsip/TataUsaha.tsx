@@ -1,16 +1,16 @@
 import Breadcrumb from '../../components/Breadcrumbs/Breadcrumb';
-import TableTataUsaha from '../../components/Tables/TableTataUsaha';
+import TableKeuangan from '../../components/Tables/TableArsip';
 
-const keuangan = () => {
+const TataUsaha = () => {
   return (
     <>
-      <Breadcrumb pageName="Bidang Tata Usaha (TU)" />
+      <Breadcrumb pageName="Bidang Tata Usaha" />
 
       <div className="flex flex-col gap-10">
-        <TableTataUsaha />
+        <TableKeuangan filterByBidang="Tata Usaha" />
       </div>
     </>
   );
 };
 
-export default keuangan;
+export default TataUsaha;

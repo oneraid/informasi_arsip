@@ -5,7 +5,11 @@ import { Arsip } from '../../types/arsip';
 import { useAuth } from '../../contexts/AuthContext';
 import ConfirmationModal from '../Modal/ConfirmationModal'; // Import modal
 
-const TableKeuangan: React.FC = () => {
+interface TableKeuanganProps {
+  filterByBidang?: string; // Optional prop for filtering by bidang
+}
+
+const TableArsip: React.FC<TableKeuanganProps> = ({ filterByBidang }) => {
   const [data, setData] = useState<Arsip[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
@@ -37,40 +41,45 @@ const TableKeuangan: React.FC = () => {
     const fetchData = async () => {
       try {
         const response = await getArsip();
-        let filteredData = response.data.filter(
-          (item: Arsip) => item.bidang === 'Keuangan',
-        );
+        let fetchedData = response.data;
 
-        // Apply filters
+        // Apply bidang filter if provided
+        if (filterByBidang) {
+          fetchedData = fetchedData.filter(
+            (item: Arsip) => item.bidang === filterByBidang,
+          );
+        }
+
+        // Apply other filters (no_rak, no_box, etc.)
         if (filters.no_rak) {
-          filteredData = filteredData.filter((item) =>
+          fetchedData = fetchedData.filter((item) =>
             item.no_rak.toLowerCase().includes(filters.no_rak.toLowerCase()),
           );
         }
         if (filters.no_box) {
-          filteredData = filteredData.filter((item) =>
+          fetchedData = fetchedData.filter((item) =>
             item.no_box.toLowerCase().includes(filters.no_box.toLowerCase()),
           );
         }
         if (filters.no_arsip) {
-          filteredData = filteredData.filter((item) =>
+          fetchedData = fetchedData.filter((item) =>
             item.no_arsip
               .toLowerCase()
               .includes(filters.no_arsip.toLowerCase()),
           );
         }
         if (filters.bulan) {
-          filteredData = filteredData.filter((item) =>
+          fetchedData = fetchedData.filter((item) =>
             item.bulan.toLowerCase().includes(filters.bulan.toLowerCase()),
           );
         }
         if (filters.tahun) {
-          filteredData = filteredData.filter((item) =>
+          fetchedData = fetchedData.filter((item) =>
             item.tahun.toLowerCase().includes(filters.tahun.toLowerCase()),
           );
         }
 
-        setData(filteredData);
+        setData(fetchedData);
       } catch (err) {
         setError('Failed to fetch data.');
       } finally {
@@ -79,7 +88,7 @@ const TableKeuangan: React.FC = () => {
     };
 
     fetchData();
-  }, [filters]);
+  }, [filters, filterByBidang]);
 
   // Pagination logic
   const indexOfLastItem = currentPage * itemsPerPage;
@@ -342,4 +351,4 @@ const TableKeuangan: React.FC = () => {
   );
 };
 
-export default TableKeuangan;
+export default TableArsip;
