@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { signup, SignupData } from '../../services/authApi';
-import LogoDark from '../../images/logo/logo-dark.svg';
-import Logo from '../../images/logo/logo.svg';
+import Logo from '../../images/logo/logo jatim.png';
 
 const SignUp: React.FC = () => {
   const [formData, setFormData] = useState<SignupData>({
@@ -32,7 +31,7 @@ const SignUp: React.FC = () => {
       const response = await signup(formData);
       console.log('User registered:', response);
       setLoading(false);
-      navigate('/');
+      navigate('/auth/signin');
       window.location.reload();
     } catch (err: any) {
       setLoading(false);
@@ -49,24 +48,27 @@ const SignUp: React.FC = () => {
       <div className="flex flex-wrap items-center">
         <div className="hidden w-full xl:block xl:w-1/2">
           <div className="py-17.5 px-26 text-center">
-            <a className="mb-5.5 inline-block" href="/">
-              <img className="hidden dark:block" src={Logo} alt="Logo" />
-              <img className="dark:hidden" src={LogoDark} alt="Logo" />
+            <a className="mb-5.5 inline-block h-75 w-75" href="/">
+              <img
+                className="hidden dark:block h-75 w-75"
+                src={Logo}
+                alt="Logo"
+              />
+              <img className="dark:hidden" src={Logo} alt="Logo" />
             </a>
-            <p className="2xl:px-20">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit
-              suspendisse.
-            </p>
+            <p className="2xl:px-20 text-3xl font-bold">BAKORWIL I MADIUN</p>
           </div>
         </div>
-        <div className="w-full xl:w-1/2">
-          <div className="p-8">
-            <h2 className="text-2xl font-bold mb-4">Sign Up</h2>
+        <div className="w-full border-stroke dark:border-strokedark xl:w-1/2 xl:border-l-2">
+          <div className="w-full p-4 sm:p-12.5 xl:p-8">
+            <h2 className="mb-5 text-2xl font-bold text-black dark:text-white sm:text-title-xl2">
+              Sign Up
+            </h2>
             <form onSubmit={handleSubmit}>
               <div className="mb-4">
                 <label
                   htmlFor="name"
-                  className="block text-sm font-medium text-gray-700"
+                  className="block font-medium text-black dark:text-white"
                 >
                   Name
                 </label>
@@ -77,13 +79,14 @@ const SignUp: React.FC = () => {
                   value={formData.name}
                   onChange={handleChange}
                   required
-                  className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                  className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 text-black outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
+                  placeholder="Enter your full name"
                 />
               </div>
               <div className="mb-4">
                 <label
                   htmlFor="email"
-                  className="block text-sm font-medium text-gray-700"
+                  className="block font-medium text-black dark:text-white"
                 >
                   Email
                 </label>
@@ -94,13 +97,14 @@ const SignUp: React.FC = () => {
                   value={formData.email}
                   onChange={handleChange}
                   required
-                  className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                  placeholder="Enter your email"
+                  className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 text-black outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
                 />
               </div>
               <div className="mb-4">
                 <label
                   htmlFor="password"
-                  className="block text-sm font-medium text-gray-700"
+                  className="block font-medium text-black dark:text-white"
                 >
                   Password
                 </label>
@@ -111,13 +115,14 @@ const SignUp: React.FC = () => {
                   value={formData.password}
                   onChange={handleChange}
                   required
-                  className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                  placeholder="Enter your password"
+                  className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 text-black outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
                 />
               </div>
               <div className="mb-4">
                 <label
                   htmlFor="password_confirmation"
-                  className="block text-sm font-medium text-gray-700"
+                  className="block font-medium text-black dark:text-white"
                 >
                   Confirm Password
                 </label>
@@ -128,7 +133,8 @@ const SignUp: React.FC = () => {
                   value={formData.password_confirmation}
                   onChange={handleChange}
                   required
-                  className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                  placeholder="Re-enter your password"
+                  className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 text-black outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
                 />
               </div>
               {error && <p className="text-red-500 text-sm">{error}</p>}
@@ -136,16 +142,16 @@ const SignUp: React.FC = () => {
                 <button
                   type="submit"
                   disabled={loading}
-                  className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                  className="w-full cursor-pointer rounded-lg border border-primary bg-primary p-4 text-white transition hover:bg-opacity-90"
                 >
                   {loading ? 'Signing up...' : 'Sign Up'}
                 </button>
               </div>
             </form>
-            <p className="mt-4 text-sm text-center text-gray-600">
+            <p className="mt-6 text-center">
               Already have an account?{' '}
               <a
-                href="/login"
+                href="/auth/signin"
                 className="text-indigo-600 hover:text-indigo-500"
               >
                 Login
