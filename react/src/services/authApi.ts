@@ -30,7 +30,7 @@ export const login = async (data: LoginData) => {
     });
     const { token, name } = response.data;
     localStorage.setItem('userToken', token);
-    localStorage.setItem('userName', name); // Store the user's name
+    localStorage.setItem('userName', name);
     return response.data;
   } catch (error) {
     throw (error as any).response

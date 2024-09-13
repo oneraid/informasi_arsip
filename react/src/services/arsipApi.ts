@@ -31,6 +31,17 @@ export const deleteArsip = async (id: number): Promise<void> => {
   await axios.delete(`${API_URL_ARSIP}/${id}`);
 };
 
+export const updateArsipStatus = async (id: number, status: string) => {
+  try {
+    const response = await axios.put(`${API_URL_ARSIP}/${id}/update-status`, {
+      status,
+    });
+    return response.data;
+  } catch (error) {
+    throw new Error('Failed to update arsip status');
+  }
+};
+
 //--------------------Peminjaman------------------------------------------------------
 
 export const getPeminjaman = async () => {

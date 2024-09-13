@@ -14,14 +14,17 @@
     "url": "https://tailadmin.com"
   },
   "dependencies": {
+    "@types/chart.js": "^2.9.41",
     "apexcharts": "^3.41.0",
     "axios": "^1.7.7",
+    "chart.js": "^4.4.4",
     "flatpickr": "^4.6.13",
     "headlessui": "^0.0.0",
     "jsvectormap": "^1.5.3",
     "match-sorter": "^6.3.1",
     "react": "^18.2.0",
     "react-apexcharts": "^1.4.1",
+    "react-chartjs-2": "^5.2.0",
     "react-dom": "^18.2.0",
     "react-dropzone": "^14.2.3",
     "react-hot-toast": "^2.4.1",

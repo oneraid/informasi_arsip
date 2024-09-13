@@ -4,6 +4,7 @@ import ChartOne from '../../components/Charts/ChartOne';
 import ChartThree from '../../components/Charts/ChartThree';
 import ChartTwo from '../../components/Charts/ChartTwo';
 import MapOne from '../../components/Maps/MapOne';
+import ArsipChart from '../../components/ArsipChart';
 
 const Dashboard: React.FC = () => {
   return (
@@ -100,6 +101,7 @@ const Dashboard: React.FC = () => {
         <ChartTwo />
         <ChartThree />
         <MapOne />
+        <ArsipChart />
       </div>
     </>
   );

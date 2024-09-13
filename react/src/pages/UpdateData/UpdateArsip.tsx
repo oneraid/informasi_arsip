@@ -30,12 +30,11 @@ const UpdateArsip: React.FC = () => {
       try {
         if (id) {
           const response = await getArsipById(parseInt(id));
-          // Ensure warna is an empty array if null/undefined
           const updatedResponse = {
             ...response,
             warna: response.warna ? response.warna : '',
           };
-          setFormData(updatedResponse); // Set the processed data
+          setFormData(updatedResponse);
         }
       } catch (error) {
         setError('Error fetching arsip data');

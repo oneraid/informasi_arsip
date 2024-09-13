@@ -6,7 +6,7 @@ import { useAuth } from '../../contexts/AuthContext';
 import ConfirmationModal from '../Modal/ConfirmationModal'; // Import modal
 
 interface TableKeuanganProps {
-  filterByBidang?: string; // Optional prop for filtering by bidang
+  filterByBidang?: string;
 }
 
 const TableArsip: React.FC<TableKeuanganProps> = ({ filterByBidang }) => {
@@ -139,14 +139,62 @@ const TableArsip: React.FC<TableKeuanganProps> = ({ filterByBidang }) => {
     setCurrentPage(page);
   };
 
+  const handleExport = async () => {
+    try {
+      // Masukkan filterByBidang dan filter lainnya ke dalam query params
+      const queryParams = new URLSearchParams({
+        no_rak: filters.no_rak,
+        no_box: filters.no_box,
+        no_arsip: filters.no_arsip,
+        bulan: filters.bulan,
+        tahun: filters.tahun,
+        bidang: filterByBidang || '',
+      }).toString();
+
+      const response = await fetch(
+        `http://127.0.0.1:8000/api/export-excel?${queryParams}`,
+        {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            // Tambahkan Authorization header jika diperlukan
+          },
+        },
+      );
+
+      if (response.ok) {
+        const blob = await response.blob();
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'arsip.xlsx';
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+      } else {
+        console.error('Failed to export data');
+      }
+    } catch (error) {
+      console.error('An error occurred while exporting:', error);
+    }
+  };
+
   if (loading) return <p>Loading...</p>;
   if (error) return <p className="text-red-500">{error}</p>;
 
   return (
     <div className="rounded-sm border border-stroke bg-white px-5 pt-6 pb-2.5 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-1">
-      <h4 className="mb-6 text-xl font-semibold text-black dark:text-white">
-        Keuangan Arsip
-      </h4>
+      <div className="flex justify-between items-center mb-6">
+        <h4 className="text-xl font-semibold text-black dark:text-white">
+          Keuangan Arsip
+        </h4>
+        <button
+          onClick={handleExport}
+          className="export-button rounded-full border border-green-300 px-2 py-1 text-sm font-medium text-green-600 hover:bg-green-300 hover:text-white focus:outline-none focus:ring active:bg-green-500"
+        >
+          Export to Excel
+        </button>
+      </div>
 
       <div className="mb-4 flex flex-wrap gap-3">
         <input
@@ -241,7 +289,7 @@ const TableArsip: React.FC<TableKeuanganProps> = ({ filterByBidang }) => {
                   {item.no_rak}
                 </td>
                 <td className="text-center px-2 py-3 text-black dark:text-white">
-                  {item.no_box}
+                  {item.no_box ? item.no_box : '-'}
                 </td>
                 <td className="text-center px-2 py-3 text-black dark:text-white">
                   {item.jenis_arsip}
@@ -259,7 +307,7 @@ const TableArsip: React.FC<TableKeuanganProps> = ({ filterByBidang }) => {
                   {item.jumlah}
                 </td>
                 <td className="text-center px-2 py-3 text-black dark:text-white">
-                  {item.warna ? item.warna : 'N/A'}
+                  {item.warna ? item.warna : '-'}
                 </td>
                 <td className="text-center px-2 py-3 text-black dark:text-white">
                   {item.status}

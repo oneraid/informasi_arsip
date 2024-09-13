@@ -36,7 +36,6 @@ const PeminjamanList: React.FC = () => {
               <th className="px-4 py-2">Tanggal Pinjam</th>
               <th className="px-4 py-2">Status</th>
               <th className="px-4 py-2">Items Borrowed</th>
-              <th className="px-4 py-2">Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -46,7 +45,7 @@ const PeminjamanList: React.FC = () => {
                 <td className="border px-4 py-2">{p.no_telp}</td>
                 <td className="border px-4 py-2">{p.email}</td>
                 <td className="border px-4 py-2">{p.tanggal_pinjam}</td>
-                <td className="border px-4 py-2">{p.status}</td>
+                <td className="border px-4 py-2 ">{p.status}</td>
                 <td className="border px-4 py-2">
                   <ul>
                     {p.arsip.map((arsip) => (
@@ -56,15 +55,6 @@ const PeminjamanList: React.FC = () => {
                       </li>
                     ))}
                   </ul>
-                </td>
-                <td className="border px-4 py-2">
-                  <button
-                    className="bg-red-500 text-white px-2 py-1 rounded"
-                    onClick={() => handleDelete(p.id)}
-                  >
-                    Delete
-                  </button>
-                  {/* Add buttons for edit/view here */}
                 </td>
               </tr>
             ))}

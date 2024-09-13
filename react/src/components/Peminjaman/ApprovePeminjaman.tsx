@@ -4,7 +4,7 @@ import {
   updatePeminjaman,
   getPeminjamanById,
   exportPeminjamanToPdf,
-  updateArsip,
+  updateArsipStatus,
 } from '../../services/arsipApi';
 import { Peminjaman } from '../../types/arsip';
 
@@ -54,12 +54,10 @@ const PeminjamanApproval: React.FC = () => {
         arsip_ids,
       };
 
-      // Update the status of the peminjaman to 'Dipinjam'
       await updatePeminjaman(id, updateData);
 
-      // Update each selected arsip to set its status to "Tidak Tersedia"
       for (const arsipId of arsip_ids) {
-        await updateArsip(arsipId, { status: 'Tidak Tersedia' });
+        await updateArsipStatus(arsipId, 'Tidak Tersedia');
       }
 
       alert('Peminjaman has been approved and Arsip status updated.');
@@ -68,6 +66,7 @@ const PeminjamanApproval: React.FC = () => {
       setPeminjamanList((prev) =>
         prev.filter((peminjaman) => peminjaman.id !== id),
       );
+      console.log(peminjaman.arsip);
     } catch (error: any) {
       console.error(
         'Error approving Peminjaman or updating Arsip status:',

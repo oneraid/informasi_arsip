@@ -19,13 +19,13 @@ class Peminjaman extends Model
         'keperluan',
         'tanggal_pinjam',
         'tanggal_kembali',
-        'status',  // Kolom status ditambahkan di sini
+        'status',
     ];
 
     public function arsip()
     {
         return $this->belongsToMany(Arsip::class, 'arsip_peminjaman')
-                    ->withTimestamps(); // Pivot table name is 'arsip_peminjaman'
+                    ->withTimestamps();
     }
 
 
