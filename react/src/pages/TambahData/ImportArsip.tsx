@@ -48,6 +48,14 @@ const FileUpload: React.FC = () => {
 
   return (
     <div className="max-w-md mx-auto p-4 bg-white rounded shadow-md">
+      <div>
+        <button
+          onClick={downloadTemplate}
+          className="px-4 py-2 rounded-lg bg-green-500 text-white hover:bg-green-600 transition"
+        >
+          Download Template
+        </button>
+      </div>
       <h1 className="text-xl font-semibold text-center mb-4">
         Upload File Arsip
       </h1>
@@ -65,7 +73,7 @@ const FileUpload: React.FC = () => {
         <button
           onClick={handleUpload}
           disabled={!file || loading}
-          className={`px-4 py-2 rounded-lg text-white transition ${
+          className={`px-4 py-2 rounded-lg text-black transition ${
             file
               ? 'bg-blue-500 hover:bg-blue-600'
               : 'bg-gray-400 cursor-not-allowed'
@@ -76,12 +84,6 @@ const FileUpload: React.FC = () => {
           ) : (
             'Upload File'
           )}
-        </button>
-        <button
-          onClick={downloadTemplate}
-          className="px-4 py-2 rounded-lg bg-green-500 text-white hover:bg-green-600 transition"
-        >
-          Download Template
         </button>
       </div>
 
