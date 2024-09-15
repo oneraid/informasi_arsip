@@ -150,10 +150,10 @@ const PeminjamanApproval: React.FC = () => {
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Info
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider text-center">
                   Arsip
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider text-center">
                   Actions
                 </th>
               </tr>
@@ -186,8 +186,9 @@ const PeminjamanApproval: React.FC = () => {
                     <ul>
                       {peminjaman.arsip.map((arsip) => (
                         <li key={arsip.id}>
-                          {arsip.jenis_arsip} {arsip.no_arsip} ({arsip.bulan}{' '}
-                          {arsip.tahun})
+                          No rak {arsip.no_rak} - No box {arsip.no_box} - Bidang{' '}
+                          {arsip.bidang}, {arsip.jenis_arsip} {arsip.no_arsip} (
+                          {arsip.bulan} {arsip.tahun})
                         </li>
                       ))}
                     </ul>

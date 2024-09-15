@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import PeminjamanModal from '../Modal/ArsipModal';
 import SuccessModal from '../Modal/SuccessModal'; // Import the SuccessModal
 import {
@@ -20,6 +20,12 @@ const PeminjamanForm: React.FC<PeminjamanFormProps> = ({ onSubmitSuccess }) => {
   const [selectedItems, setSelectedItems] = useState<any[]>([]);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [isSuccessModalOpen, setIsSuccessModalOpen] = useState<boolean>(false);
+
+  useEffect(() => {
+    // Mengatur tanggal kembali otomatis dengan tanggal hari ini
+    const today = new Date().toISOString().split('T')[0];
+    setTanggalPinjam(today);
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -82,7 +88,7 @@ const PeminjamanForm: React.FC<PeminjamanFormProps> = ({ onSubmitSuccess }) => {
             id="nama"
             value={nama}
             onChange={(e) => setNama(e.target.value)}
-            className="border border-gray-300 rounded-md p-2 w-full"
+            className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 text-black outline-none transition focus:border-primary dark:border-form-strokedark dark:bg-form-input dark:text-white"
             required
           />
         </div>
@@ -95,7 +101,7 @@ const PeminjamanForm: React.FC<PeminjamanFormProps> = ({ onSubmitSuccess }) => {
             id="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="border border-gray-300 rounded-md p-2 w-full"
+            className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 text-black outline-none transition focus:border-primary dark:border-form-strokedark dark:bg-form-input dark:text-white"
             required
           />
         </div>
@@ -108,7 +114,7 @@ const PeminjamanForm: React.FC<PeminjamanFormProps> = ({ onSubmitSuccess }) => {
             id="no_telp"
             value={noTelp}
             onChange={(e) => setNoTelp(e.target.value)}
-            className="border border-gray-300 rounded-md p-2 w-full"
+            className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 text-black outline-none transition focus:border-primary dark:border-form-strokedark dark:bg-form-input dark:text-white"
             required
           />
         </div>
@@ -121,7 +127,7 @@ const PeminjamanForm: React.FC<PeminjamanFormProps> = ({ onSubmitSuccess }) => {
             id="keperluan"
             value={keperluan}
             onChange={(e) => setKeperluan(e.target.value)}
-            className="border border-gray-300 rounded-md p-2 w-full"
+            className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 text-black outline-none transition focus:border-primary dark:border-form-strokedark dark:bg-form-input dark:text-white"
             required
           />
         </div>
@@ -137,7 +143,7 @@ const PeminjamanForm: React.FC<PeminjamanFormProps> = ({ onSubmitSuccess }) => {
             id="tanggal_pinjam"
             value={tanggalPinjam}
             onChange={(e) => setTanggalPinjam(e.target.value)}
-            className="border border-gray-300 rounded-md p-2 w-full"
+            className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 text-black outline-none transition focus:border-primary dark:border-form-strokedark dark:bg-form-input dark:text-white"
             required
           />
         </div>
@@ -153,17 +159,23 @@ const PeminjamanForm: React.FC<PeminjamanFormProps> = ({ onSubmitSuccess }) => {
             id="tanggal_kembali"
             value={tanggalKembali}
             onChange={(e) => setTanggalKembali(e.target.value)}
-            className="border border-gray-300 rounded-md p-2 w-full"
+            className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 text-black outline-none transition focus:border-primary dark:border-form-strokedark dark:bg-form-input dark:text-white"
             required
           />
         </div>
         <div className="mb-4">
+          <label
+            htmlFor="tanggal_kembali"
+            className="block text-sm font-medium mb-2"
+          >
+            Pilih Arsip
+          </label>
           <button
             type="button"
             onClick={() => setIsModalOpen(true)}
             className="bg-blue-500 text-white px-4 py-2 rounded-md"
           >
-            Pilih Arsip
+            + Pilih Arsip
           </button>
         </div>
 

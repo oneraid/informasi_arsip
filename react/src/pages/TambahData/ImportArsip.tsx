@@ -64,7 +64,7 @@ const FileUpload: React.FC = () => {
       <div className="container mx-auto max-w-3xl p-6 bg-white rounded-md shadow-md  dark:border-strokedark dark:bg-boxdark">
         {/* Wrapper for Upload File and Download Template buttons */}
         <div className="flex justify-between items-center mb-4">
-          <h2 className="text-2xl font-bold text-black mb-4">
+          <h2 className="text-2xl font-bold text-black mb-4 dark:text-gray">
             Upload File Arsip
           </h2>
           <div className="flex items-center">

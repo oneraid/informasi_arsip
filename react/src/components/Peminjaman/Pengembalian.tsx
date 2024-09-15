@@ -5,6 +5,7 @@ import {
   getPeminjamanById,
   updateArsip,
   sendReminderEmail,
+  updateArsipStatus,
 } from '../../services/arsipApi';
 import { Peminjaman } from '../../types/arsip';
 import ConfirmationModal from '../Modal/ConfirmationModal'; // Import modal
@@ -55,10 +56,12 @@ const Pengembalian: React.FC = () => {
         arsip_ids,
       };
 
+      // Update peminjaman status to "Selesai"
       await updatePeminjaman(id, updateData);
 
+      // Update each Arsip status to "Tersedia"
       for (const arsipId of arsip_ids) {
-        await updateArsip(arsipId, { status: 'Tersedia' });
+        await updateArsipStatus(arsipId, 'Tersedia');
       }
 
       alert('Peminjaman telah berhasil dikembalikan.');
