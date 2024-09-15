@@ -33,11 +33,13 @@ Route::prefix('arsip')->group(function () {
 
 
     Route::get('/arsip-bidang', [ArsipController::class, 'getArsipByBidang']);
-    Route::get('/arsip-by-year-and-bidang', [ArsipController::class, 'getArsipByYearAndBidang']);
+
 
     Route::post('/import', [ArsipController::class, 'import']);
     Route::get('/export-excel', [ArsipController::class, 'exportArsip']);
 });
+
+Route::get('/arsip-by-year-and-bidang', [ArsipController::class, 'getArsipByYearAndBidang']);
 
 use App\Http\Controllers\ArsipExportController;
 

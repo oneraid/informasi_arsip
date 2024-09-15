@@ -164,8 +164,14 @@ class ArsipController extends Controller
 
     public function getArsipByYearAndBidang()
 {
-    return response()->json(['message' => 'Route works']);
+    $arsipData = Arsip::select(DB::raw('tahun, bidang, COUNT(id) as total_arsip'))
+        ->groupBy('tahun', 'bidang')
+        ->get();
+
+    return response()->json($arsipData);
 }
+
+
 
 
 
