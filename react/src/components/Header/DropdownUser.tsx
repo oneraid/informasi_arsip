@@ -74,7 +74,13 @@ const DropdownUser: React.FC = () => {
             to="/auth/signin"
             className="text-sm font-medium text-black dark:text-white"
           >
-            Login/Register
+            <button
+              aria-label="Start Game"
+              className="px-6 py-1 dark:text-white  text-md rounded-full shadow-lg transition-transform transform bg-transparent border-2 dark:border-white hover:scale-105 hover:border-blue-600 hover:shadow-blue-500/50 hover:shadow-2xl focus:outline-none dark:hover:border-green-600 dark:hover:shadow-green-500/50"
+              id="startButton"
+            >
+              Login
+            </button>
           </Link>
         )}
       </Link>
@@ -84,7 +90,7 @@ const DropdownUser: React.FC = () => {
           <ul className="flex flex-col gap-5 border-b border-stroke px-4 py-5 dark:border-strokedark">
             <li>
               <Link
-                to="/profile"
+                to="/settings"
                 className="flex items-center gap-3 text-sm font-medium duration-300 ease-in-out hover:text-primary lg:text-base"
               >
                 <svg

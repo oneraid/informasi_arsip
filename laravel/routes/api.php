@@ -7,7 +7,7 @@ use App\Http\Controllers\ArsipController;
 use App\Http\Controllers\Auth\ResetEmailandPassword;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Auth\RegisteredUserController;
-
+use App\Http\Controllers\ArsipExportController;
 
 Route::prefix('peminjaman')->group(function () {
     Route::get('/', [PeminjamanController::class, 'index']);
@@ -31,20 +31,14 @@ Route::prefix('arsip')->group(function () {
     Route::delete('/{id}', [ArsipController::class, 'destroy']);
     Route::put('/{id}/update-status', [ArsipController::class, 'updateStatus']);
 
-
-    Route::get('/arsip-bidang', [ArsipController::class, 'getArsipByBidang']);
-
-
     Route::post('/import', [ArsipController::class, 'import']);
     Route::get('/export-excel', [ArsipController::class, 'exportArsip']);
 });
 
+Route::get('/total-arsip-per-bidang', [ArsipController::class, 'getTotalArsipPerBidang']);
 Route::get('/arsip-by-year-and-bidang', [ArsipController::class, 'getArsipByYearAndBidang']);
 
-use App\Http\Controllers\ArsipExportController;
-
 Route::get('/export-excel', [ArsipExportController::class, 'exportExcel']);
-
 
 
 Route::post('/register', [RegisteredUserController::class, 'register']);
@@ -52,6 +46,7 @@ Route::post('/login', [AuthenticatedSessionController::class, 'login']);
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthenticatedSessionController::class, 'logout']);
-    Route::post('update-password', [ResetEmailandPassword::class, 'updatePassword']);
-    Route::post('update-email', [ResetEmailandPassword::class, 'updateEmail']);
+    Route::post('/update-password', [ResetEmailandPassword::class, 'updatePassword']);
+    Route::post('/update-email', [ResetEmailandPassword::class, 'updateEmail']);
+    Route::post('/update-name', [ResetEmailandPassword::class, 'updateName']);
 });

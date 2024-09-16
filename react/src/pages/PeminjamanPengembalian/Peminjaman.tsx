@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import PeminjamanForm from '../../components/Peminjaman/PeminjamanForm';
 import PeminjamanList from '../../components/Peminjaman/PeminjamanList';
+import Breadcrumb from '../../components/Breadcrumbs/Breadcrumb';
 
 const Peminjaman: React.FC = () => {
   const [isFormSubmitted, setIsFormSubmitted] = useState(false);
@@ -13,6 +14,7 @@ const Peminjaman: React.FC = () => {
 
   return (
     <div>
+      <Breadcrumb pageName="Peminjaman Arsip" />
       <div>
         <h1>Manajemen Peminjaman</h1>
         <PeminjamanForm onSubmitSuccess={handleFormSubmitSuccess} />

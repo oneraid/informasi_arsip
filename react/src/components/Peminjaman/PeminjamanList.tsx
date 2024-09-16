@@ -16,11 +16,6 @@ const PeminjamanList: React.FC = () => {
     fetchData();
   }, []);
 
-  const handleDelete = async (id: number) => {
-    await deletePeminjaman(id);
-    setPeminjaman(peminjaman.filter((p) => p.id !== id));
-  };
-
   return (
     <div className="container mx-auto p-4">
       <h1 className="text-2xl font-bold mb-4">Pending Peminjaman List</h1>
@@ -31,9 +26,8 @@ const PeminjamanList: React.FC = () => {
           <thead>
             <tr>
               <th className="px-4 py-2">Nama</th>
-              <th className="px-4 py-2">No Telp</th>
-              <th className="px-4 py-2">Email</th>
               <th className="px-4 py-2">Tanggal Pinjam</th>
+              <th className="px-4 py-2">Tanggal Kembali</th>
               <th className="px-4 py-2">Status</th>
               <th className="px-4 py-2">Items Borrowed</th>
             </tr>
@@ -42,9 +36,8 @@ const PeminjamanList: React.FC = () => {
             {peminjaman.map((p) => (
               <tr key={p.id}>
                 <td className="border px-4 py-2">{p.nama}</td>
-                <td className="border px-4 py-2">{p.no_telp}</td>
-                <td className="border px-4 py-2">{p.email}</td>
                 <td className="border px-4 py-2">{p.tanggal_pinjam}</td>
+                <td className="border px-4 py-2">{p.tanggal_kembali}</td>
                 <td className="border px-4 py-2 ">{p.status}</td>
                 <td className="border px-4 py-2">
                   <ul>

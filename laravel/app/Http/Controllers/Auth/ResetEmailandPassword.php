@@ -6,87 +6,90 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
+use App\Models\User;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\Rules;
 
 class ResetEmailandPassword extends Controller
 {
     /**
  * Update the authenticated user's password.
  */
-    public function updatePassword(Request $request)
-    {
-        $validator = Validator::make($request->all(), [
-            'current_password' => 'required|string|min:8',
-            'new_password' => 'required|string|min:8|confirmed',
-        ]);
+public function updateEmail(Request $request)
+{
+    $request->validate([
+        'current_email' => ['required', 'email'],
+        'email' => ['required', 'email', 'unique:users,email'],
+    ]);
 
-        if ($validator->fails()) {
-            return response()->json([
-                'success' => false,
-                'errors' => $validator->errors(),
-            ], 422);
-        }
+    $user = $request->user();
 
-        $user = Auth::user();
-
-        if (!password_verify($request->input('current_password'), $user->password)) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Current password is incorrect',
-            ], 401);
-        }
-
-        $user = Auth::user(); // Authenticated user
-        if ($user instanceof \App\Models\User) {
-            $user->update([
-                'password' => bcrypt($request->input('new_password')),
-            ]);
+    // Check if the current email matches the user's current email in the database
+    if ($request->current_email !== $user->email) {
+        return response()->json([
+            'message' => 'Current email does not match.',
+        ], 422);
     }
 
+    // If the current email matches, update to the new email
+    $user->update([
+        'email' => $request->email,
+    ]);
 
     return response()->json([
-        'success' => true,
-        'message' => 'Password updated successfully',
+        'message' => 'Email updated successfully!',
+        'user' => $user,
     ], 200);
 }
+
+
 
 /**
  * Update the authenticated user's email.
  */
-    public function updateEmail(Request $request)
+    public function updatePassword(Request $request)
     {
-        $validator = Validator::make($request->all(), [
-            'password' => 'required|string|min:8',
-            'new_email' => 'required|string|email|max:255|unique:users,email',
+        $request->validate([
+            'current_password' => ['required'],
+            'new_password' => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
 
-        if ($validator->fails()) {
+        $user = $request->user();
+
+        // Check if the current password matches
+        if (!Hash::check($request->current_password, $user->password)) {
             return response()->json([
-                'success' => false,
-                'errors' => $validator->errors(),
-            ], 422);
+                'message' => 'Current password is incorrect!',
+            ], 400);
         }
 
-        $user = Auth::user();
-
-        if (!password_verify($request->input('password'), $user->password)) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Password is incorrect',
-            ], 401);
-        }
-
-        $user = Auth::user(); // Authenticated user
-        if ($user instanceof \App\Models\User) {
-            $user->update([
-                'email' => bcrypt($request->input('new_email')),
-            ]);
-        }
+        // Update the password
+        $user->update([
+            'password' => Hash::make($request->new_password),
+        ]);
 
         return response()->json([
-            'success' => true,
-            'message' => 'Email updated successfully',
+            'message' => 'Password updated successfully!',
         ], 200);
+    }
+
+    public function updateName(Request $request)
+    {
+        $request->validate([
+            'name' => ['required', 'string', 'max:255'],
+        ]);
+
+        $user = $request->user();
+
+        $user->update([
+            'name' => $request->name,
+        ]);
+
+        return response()->json([
+            'message' => 'Name updated successfully!',
+            'user' => $user,
+        ], 200);
+    }
 }
 
 
-}

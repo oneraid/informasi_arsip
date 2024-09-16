@@ -102,7 +102,7 @@ const ArsipChart: React.FC = () => {
       },
       yaxis: {
         min: 0,
-        max: 100,
+        max: 200,
         labels: {
           formatter: function (value) {
             return value.toFixed(0); // Show whole numbers

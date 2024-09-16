@@ -57,11 +57,11 @@ const ChartTwo: React.FC = () => {
   });
 
   useEffect(() => {
-    // Fetch archive data by bidang and year
+    // Fetch archive data by bidang
     const fetchData = async () => {
       try {
         const response = await axios.get(
-          'http://127.0.0.1:8000/api/arsip-by-year-and-bidang',
+          'http://127.0.0.1:8000/api/total-arsip-per-bidang',
         );
         const arsipData = response.data;
 

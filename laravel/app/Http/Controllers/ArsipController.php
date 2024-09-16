@@ -156,10 +156,16 @@ class ArsipController extends Controller
 
 
 
-    public function getArsipByBidang()
-    {
-        return response()->json(['message' => 'Route works']);
-    }
+    public function getTotalArsipPerBidang()
+{
+    // Mengelompokkan data berdasarkan bidang dan menghitung total arsip untuk setiap bidang
+    $totalArsip = Arsip::select('bidang', DB::raw('COUNT(id) as total_arsip'))
+        ->groupBy('bidang')
+        ->get();
+
+    return response()->json($totalArsip);
+}
+
 
 
     public function getArsipByYearAndBidang()
